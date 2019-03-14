@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Postcard</string>
+    <string name="title_activity_main">Postcard</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Explore</string>
+    <string name="title_notifications">Profile</string>
 </resources>
