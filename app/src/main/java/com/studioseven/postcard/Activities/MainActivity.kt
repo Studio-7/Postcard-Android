@@ -1,10 +1,11 @@
-package com.studioseven.postcard
+package com.studioseven.postcard.Activities
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import com.studioseven.postcard.Adapters.ImageAdapter
 import com.studioseven.postcard.Models.Image
+import com.studioseven.postcard.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_postcard.*
 

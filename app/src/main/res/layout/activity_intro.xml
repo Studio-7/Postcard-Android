@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/linearlayout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context=".Activities.IntroActivity"
+              android:background="@color/colorPrimary"
+              android:weightSum="10"
+              android:orientation="vertical">
+
+    <com.studioseven.postcard.Utils.NonSwipeableViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+        <LinearLayout
+            android:id="@+id/slidePositionIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/intro1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:src="@drawable/intro_dot_selected"
+                android:padding="5dp"
+                />
+            <ImageView
+                android:id="@+id/intro2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:src="@drawable/intro_dot_default"
+                android:padding="5dp" />
+            <ImageView
+                android:id="@+id/intro3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:src="@drawable/intro_dot_default"
+                android:padding="5dp" />
+        </LinearLayout>
+        <TextView
+                android:id="@+id/intro_skip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@+id/slidePositionIndicator"
+                android:gravity="end|center_vertical"
+                android:padding="5dp"
+                android:text="NEXT"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/slidePositionIndicator"/>
+    </RelativeLayout>
+
+</LinearLayout>
