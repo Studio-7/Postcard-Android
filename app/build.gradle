@@ -46,4 +46,6 @@ dependencies {
     //Discrete Scroll View
     implementation 'com.yarolegovich:discrete-scrollview:1.4.9'
 
+    //Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }
