@@ -1,4 +1,4 @@
-package com.studioseven.postcard;
+package com.studioseven.postcard.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,8 +17,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
+import com.studioseven.postcard.R;
 
-public class SignIn extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity {
     Button gbtn,obtn;
     FirebaseAuth mAuth;
     private static final int RC_SIGN_IN=2;
@@ -36,17 +37,13 @@ public class SignIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         gbtn=findViewById(R.id.googleLogin);
-       // obtn=findViewById(R.id.otheraccount);
         mAuth = FirebaseAuth.getInstance();
 
 
         gbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 signIn();
-
-
             }
         });
 
@@ -55,11 +52,10 @@ public class SignIn extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser()!=null)
                 {
-                    Intent i=new Intent(SignIn.this,MainActivity.class);
+                    Intent i=new Intent(SignInActivity.this,IntroActivity.class);
                     startActivity(i);
-
+                    finish();
                 }
-
             }
         };
 
@@ -74,7 +70,7 @@ public class SignIn extends AppCompatActivity {
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Toast.makeText(SignIn.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignInActivity.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
@@ -86,7 +82,6 @@ public class SignIn extends AppCompatActivity {
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
-
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -129,17 +124,15 @@ public class SignIn extends AppCompatActivity {
                                 // FirebaseUser.getIdToken() instead.
                                 String token= account.getIdToken();
                                 String uid = user.getUid();
-                                Toast.makeText(SignIn.this, " name" + name + " \nUID " + uid +" \nToken "+ token, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignInActivity.this, " name" + name + " \nUID " + uid +" \nToken "+ token, Toast.LENGTH_SHORT).show();
                                 // updateUI(user);
                             }
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "signInWithCredential:failure", task.getException());
-                            Toast.makeText(SignIn.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignInActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
                             // updateUI(null);
                         }
-
-                        // ...
                     }
                 });
     }
