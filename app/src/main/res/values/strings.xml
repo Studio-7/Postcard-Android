@@ -4,4 +4,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Explore</string>
     <string name="title_notifications">Profile</string>
+
+    <string name="question">Question</string>
+
 </resources>
