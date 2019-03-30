@@ -54,6 +54,10 @@ public class OptionAdapter extends RecyclerView.Adapter<OptionAdapter.OptionView
         holder.title.setText(article.getOption());
         Glide.with(mContext).load(article.getThumbnail()).into(holder.article_thumbnail);
         holder.cardView.setSelected(selectedItems.get(i, false));
+
+        HashSet<String> set = new HashSet<>();
+        addToSharedPreference(set, fragmentID);
+
         holder.article_thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,24 +96,24 @@ public class OptionAdapter extends RecyclerView.Adapter<OptionAdapter.OptionView
         return mOptionList.size();
     }
 
-    public void addToSharedPreference(Set<String> set, int fragmentID) {
+    private void addToSharedPreference(Set<String> set, int fragmentID) {
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putStringSet(String.valueOf(fragmentID), set);
-        editor.commit();
+        editor.apply();
     }
 
-    public class OptionViewHolder extends RecyclerView.ViewHolder {
-        public TextView title;
-        public ImageView article_thumbnail;
-        public RelativeLayout cardLayout;
-        public CardView cardView;
+    class OptionViewHolder extends RecyclerView.ViewHolder {
+        TextView title;
+        ImageView article_thumbnail;
+        RelativeLayout cardLayout;
+        CardView cardView;
 
-        public OptionViewHolder(View view) {
+        OptionViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.title);
-            article_thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
-            cardLayout = (RelativeLayout) view.findViewById(R.id.card_layout);
-            cardView = (CardView) view.findViewById(R.id.card_view);
+            title = view.findViewById(R.id.title);
+            article_thumbnail = view.findViewById(R.id.thumbnail);
+            cardLayout = view.findViewById(R.id.card_layout);
+            cardView = view.findViewById(R.id.card_view);
         }
     }
 }
