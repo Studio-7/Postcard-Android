@@ -13,7 +13,7 @@ import com.studioseven.postcard.Adapters.OptionAdapter
 import com.studioseven.postcard.Models.Options
 import com.studioseven.postcard.R
 
-class Fragment_questionnaire : Fragment() {
+class QuestionFragment : Fragment() {
 
     private val QUES: String = "question"
     private val OPTIONS: String = "options"
@@ -46,12 +46,12 @@ class Fragment_questionnaire : Fragment() {
         private val OPTIONS: String = "options"
         private val FRAGMENT_NUMBER = "id"
 
-        fun newInstance(question: String, options: ArrayList<Options>, id: Int): Fragment_questionnaire {
+        fun newInstance(question: String, options: ArrayList<Options>, id: Int): QuestionFragment {
             val args = Bundle()
             args.putString(QUES, question)
             args.putParcelableArrayList(OPTIONS, options)
             args.putInt(FRAGMENT_NUMBER, id)
-            val fragment = Fragment_questionnaire()
+            val fragment = QuestionFragment()
             fragment.arguments = args
             return fragment
         }

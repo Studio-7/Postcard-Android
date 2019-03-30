@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import com.studioseven.postcard.Models.Options
-import com.studioseven.postcard.Fragments.Fragment_questionnaire
+import com.studioseven.postcard.Fragments.QuestionFragment
 import com.studioseven.postcard.R
 
 class PagerAdapter internal constructor(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
@@ -15,9 +15,9 @@ class PagerAdapter internal constructor(fragmentManager: FragmentManager) : Frag
         list.add(options)
         list.add(option2)
         when(p0){
-            0 -> return Fragment_questionnaire.newInstance("This is my question", list, 0)
-            1 -> return Fragment_questionnaire.newInstance("This is my second question", list, 1)
-            2 -> return Fragment_questionnaire.newInstance("This is my third question", list, 2)
+            0 -> return QuestionFragment.newInstance("This is my question", list, 0)
+            1 -> return QuestionFragment.newInstance("This is my second question", list, 1)
+            2 -> return QuestionFragment.newInstance("This is my third question", list, 2)
         }
         return null
     }
