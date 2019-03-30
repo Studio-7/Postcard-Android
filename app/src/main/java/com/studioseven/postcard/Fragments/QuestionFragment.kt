@@ -22,7 +22,7 @@ class QuestionFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val retView =  inflater.inflate(R.layout.fragment_fragment_questionnaire, container, false)
+        val retView =  inflater.inflate(R.layout.fragment_questionnaire, container, false)
 
         val args = arguments
         var optionList : ArrayList<Options> = args!!.getParcelableArrayList<Options>(OPTIONS)

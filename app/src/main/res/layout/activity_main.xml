@@ -8,18 +8,8 @@
         android:layout_height="match_parent"
         tools:context=".Activities.MainActivity">
 
-    <TextView
-            android:id="@+id/message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:text="@string/title_home"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
 
-    <include layout="@layout/item_postcard"
+    <include layout="@layout/content_main"
             app:layout_constraintBottom_toTopOf="@id/navigation"/>
 
     <android.support.design.widget.BottomNavigationView
