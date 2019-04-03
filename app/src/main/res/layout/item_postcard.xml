@@ -124,18 +124,18 @@
                     android:id="@+id/image_heart_red"
                     android:layout_marginLeft="20dp"
                     android:src="@drawable/ic_heart_red"
-                    android:visibility="visible"/>
+                    android:visibility="invisible"/>
 
-            <!--<ImageView
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:id="@+id/image_heart"
-                            android:layout_marginLeft="20dp"
-                            android:src="@drawable/ic_heart_red"
-                            android:visibility="visible"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="0dp"
-                            android:layout_alignParentTop="true"/>-->
+            <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="32dp"
+                    android:id="@+id/image_heart_white"
+                    android:layout_marginLeft="20dp"
+                    app:srcCompat="@drawable/ic_like"
+                    android:visibility="visible"
+                    android:layout_marginTop="2dp"
+                    android:layout_alignParentTop="true"
+                    android:onClick="whiteHeartClicked"/>
 
             <ImageView
                     android:layout_width="35dp"

@@ -61,8 +61,20 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
+
+        image_heart_white.setOnClickListener{
+            image_heart_white.visibility = View.INVISIBLE
+            image_heart_red.visibility = View.VISIBLE
+        }
+        image_heart_red.setOnClickListener{
+            image_heart_white.visibility = View.VISIBLE
+            image_heart_red.visibility = View.INVISIBLE
+        }
+
+        return view
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
