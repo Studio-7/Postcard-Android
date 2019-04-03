@@ -17,6 +17,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
+import com.studioseven.postcard.Network.RestAPI;
 import com.studioseven.postcard.R;
 
 public class SignInActivity extends AppCompatActivity {
@@ -39,6 +40,8 @@ public class SignInActivity extends AppCompatActivity {
         gbtn=findViewById(R.id.googleLogin);
         mAuth = FirebaseAuth.getInstance();
 
+        // RestAPI Code
+        /*RestAPI.Companion.getAppService().signUp();*/
 
         gbtn.setOnClickListener(new View.OnClickListener() {
             @Override
