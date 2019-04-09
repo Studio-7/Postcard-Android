@@ -17,7 +17,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
-import com.studioseven.postcard.Network.RestAPI;
 import com.studioseven.postcard.R;
 
 public class SignInActivity extends AppCompatActivity {
@@ -55,7 +54,7 @@ public class SignInActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser()!=null)
                 {
-                    Intent i=new Intent(SignInActivity.this,IntroActivity.class);
+                    Intent i=new Intent(SignInActivity.this, MainActivity.class);
                     startActivity(i);
                     finish();
                 }
