@@ -1,6 +1,5 @@
 package com.studioseven.postcard.Fragments
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -9,9 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.studioseven.postcard.Adapters.ImageAdapter
 import com.studioseven.postcard.Models.Image
-
 import com.studioseven.postcard.R
 import kotlinx.android.synthetic.main.item_postcard.*
+import kotlinx.android.synthetic.main.item_postcard.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -43,6 +42,15 @@ class HomeFragment : Fragment() {
         /*Picasso.get().load("https://ichef.bbci.co.uk/news/660/cpsprodpb/E9DF/production/_96317895_gettyimages-164067218.jpg")
             .into(postImage)*/
 
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
+
         val images: List<Image> = listOf(
             Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRh8mC7z2hVvA9ljM1NtgyxfROwyTGCcFOKYIXHSGxi__1KjX5m"),
             Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrAzB3dynTfZ4CioA56_XksdHsXMZUZgv4HfSb5O9js5BBjEix"),
@@ -53,21 +61,14 @@ class HomeFragment : Fragment() {
         )
 
         /*imageScroll.layoutManager = GridLayoutManager(this, 2)*/
-        //imageScroll.adapter = ImageAdapter(images)
-    }
+        view.imageScroll.adapter = ImageAdapter(images)
+        view.imageScroll.smoothScrollToPosition(3)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
-
-        image_heart_white.setOnClickListener{
+        view.image_heart_white.setOnClickListener{
             image_heart_white.visibility = View.INVISIBLE
             image_heart_red.visibility = View.VISIBLE
         }
-        image_heart_red.setOnClickListener{
+        view.image_heart_red.setOnClickListener{
             image_heart_white.visibility = View.VISIBLE
             image_heart_red.visibility = View.INVISIBLE
         }

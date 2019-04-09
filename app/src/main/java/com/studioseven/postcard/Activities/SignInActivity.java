@@ -18,7 +18,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
-import com.studioseven.postcard.Network.RestAPI;
 import com.studioseven.postcard.R;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -74,18 +73,8 @@ public class SignInActivity extends AppCompatActivity {
                 lname="lname";
                 email="email";
                 api_call(user,IdToken,fname,lname,email);
-
             }
         });
-
-
-
-
-
-
-
-
-
 
         mGoogleApiClient=new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
