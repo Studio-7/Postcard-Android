@@ -9,5 +9,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="server_clientid">382616616288-g4asoc8ks3jasr7nfvs88649s9t6j0s7.apps.googleusercontent.com</string>
 
 </resources>

@@ -19,38 +19,59 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.*;
 import com.studioseven.postcard.Network.RestAPI;
 import com.studioseven.postcard.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignInActivity extends AppCompatActivity {
     Button gbtn,obtn;
-    FirebaseAuth mAuth;
-    private static final int RC_SIGN_IN=2;
+    String IdToken,user,fname,lname,email,result,token;
+    private static final int RC_SIGN_IN=9001;
     GoogleApiClient mGoogleApiClient;
-    FirebaseAuth.AuthStateListener mAuthListener;
+    // FirebaseAuth mAuth;
+   // FirebaseAuth.AuthStateListener mAuthListener;
 
-    @Override
+    /*@Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         gbtn=findViewById(R.id.googleLogin);
-        mAuth = FirebaseAuth.getInstance();
+
+
+        GoogleSignInOptions gso=new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.server_clientid))
+                .requestEmail()
+                .build();
+
+
 
         // RestAPI Code
-        /*RestAPI.Companion.getAppService().signUp();*/
+
 
         gbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signIn();
             }
+
+
         });
 
-        mAuthListener=new FirebaseAuth.AuthStateListener() {
+
+
+
+        // mAuth = FirebaseAuth.getInstance();
+
+       /* mAuthListener=new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser()!=null)
@@ -60,14 +81,11 @@ public class SignInActivity extends AppCompatActivity {
                     finish();
                 }
             }
-        };
+        };*/
 
 
 
-        GoogleSignInOptions gso=new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
+
 
         mGoogleApiClient=new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
@@ -85,6 +103,7 @@ public class SignInActivity extends AppCompatActivity {
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -96,7 +115,7 @@ public class SignInActivity extends AppCompatActivity {
             if (result.isSuccess())
             {
                 GoogleSignInAccount account=result.getSignInAccount();
-                firebaseAuthWithGoogle(account);
+                HandleSignIn(account);
 
             }
             else {
@@ -105,9 +124,39 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
-    private void firebaseAuthWithGoogle(final GoogleSignInAccount account) {
+    private void  HandleSignIn(final GoogleSignInAccount account) {
+        String IdToken= account.getIdToken();
+        Log.d("DD",IdToken);
+        lname=account.getFamilyName();
+        fname=account.getGivenName();
+        email=account.getEmail();
+        String[] arr=email.split("@");
+        user=arr[0];
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        RestAPI.Companion.getAppService().signUp(user,IdToken,fname,lname,email).enqueue(new Callback<Map<String, String>>() {
+            @Override
+            public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+                Map<String, String> hm = new HashMap<>();
+                hm = response.body();
+                result=hm.get("result");
+                token=hm.get("jwt");
+                Toast.makeText(SignInActivity.this, " REsult is "+result+ "  Token is "+token , Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, String>> call, Throwable t) {
+
+            }
+        });
+        Toast.makeText(this, "Result is "+ result+ " jwt: "+ token, Toast.LENGTH_SHORT).show();
+
+     // Toast.makeText(this, " Username "+ user+" Lname : "+lname+" fname: "+fname+" email: "+email , Toast.LENGTH_LONG).show();
+        Intent i=new Intent(SignInActivity.this,IntroActivity.class);
+        startActivity(i);
+
+
+       /* AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -137,7 +186,7 @@ public class SignInActivity extends AppCompatActivity {
                             // updateUI(null);
                         }
                     }
-                });
+                });*/
     }
 }
 
