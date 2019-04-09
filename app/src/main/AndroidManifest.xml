@@ -12,7 +12,9 @@
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".Activities.SignInActivity">
+        <activity android:name=".Activities.SignInActivity"
+                  android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -24,7 +26,6 @@
                 android:name=".Activities.MainActivity"
                 android:label="@string/title_activity_main">
         </activity>
-
         <activity android:name=".Activities.IntroActivity"
                 android:theme="@style/Theme.AppCompat.NoActionBar"/>
     </application>

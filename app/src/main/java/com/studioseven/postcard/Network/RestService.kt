@@ -1,15 +1,18 @@
 package com.studioseven.postcard.Network
 
 import io.reactivex.Observable
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.Call
+import retrofit2.http.*
+import java.util.concurrent.Callable
 
 interface RestService {
 
+    @FormUrlEncoded
     @POST("user/signup")
-    fun signUp(@Query("username") username: String,
-               @Query("password") password: String,
-               @Query("fname") fname: String,
-               @Query("lname") lname: String,
-               @Query("email") email: String): Observable<Map<String, String>>
+    fun signUp(@Field("username") username: String,
+               @Field("password") password: String,
+               @Field("fname") fname: String,
+               @Field("lname") lname: String,
+               @Field("email") email: String): Call<Map<String, String>>
 }
+
