@@ -17,7 +17,7 @@
             android:fontFamily="casual"
             android:textSize="50dp"
             android:gravity="center"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="20dp"
             android:textColor="@color/purple_500"
             />
     <TextView
@@ -26,27 +26,105 @@
             android:text="Dream. Explore. Discover"
             android:gravity="center"
             android:textSize="25dp"
-            android:textColor="@color/green_300"
+            android:textColor="@color/blue_200"
             android:fontFamily="sans-serif"
-            android:layout_marginBottom="150dp"
+            android:layout_marginBottom="40dp"
             />
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="30dp"
+            >
+
+    <EditText
+            android:id="@+id/Username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+            android:textSize="20dp"
+            android:textColor="@color/blue_200"
+            android:background="@drawable/round_edit_text"
+            android:padding="15dp"
+            android:layout_margin="10dp"
+
+            />
+    <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:textSize="20dp"
+            android:textColor="@color/blue_200"
+            android:background="@drawable/round_edit_text"
+            android:padding="15dp"
+            android:layout_margin="10dp"
+
+            />
+
+    <Button
+            android:id="@+id/Login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/roundbutton"
+            android:textSize="25dp"
+            android:text=" LOG IN "
+            android:fontFamily="sans-serif"
+            android:textColor="@color/white"
+            android:padding="5dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            />
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+    <View
+            android:layout_width="140dp"
+            android:layout_height="2dp"
+            android:background="@color/blue_200"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OR"
+                android:textSize="20dp"
+                android:textColor="@color/blue_200"/>
+        <View
+                android:layout_width="140dp"
+                android:layout_height="2dp"
+                android:background="@color/blue_200"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="15dp"/>
+
+    </LinearLayout>
+
+
+
 
     <Button
             android:id="@+id/googleLogin"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:background="@drawable/roundbutton"
-            android:text="  Log In  "
             android:textSize="25dp"
             android:fontFamily="sans-serif"
             android:textColor="@color/white"
-            android:drawableLeft="@drawable/google"
-            android:drawablePadding="10dp"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="10dp"
+            android:drawableTop="@drawable/google"
+            android:paddingTop="15dp"
+            android:layout_marginTop="30dp"
             android:gravity="center"
             android:layout_gravity="center"
+
             />
 
 
 </LinearLayout>
+
