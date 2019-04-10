@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="140dp"
+                android:layout_width="110dp"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp">
-    <ImageView
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/imageView"
+            android:src="@drawable/abhi"
             android:scaleType="centerCrop"
-            android:src="@drawable/abhi"/>
+            app:riv_corner_radius="10dip"
+            app:riv_mutate_background="true"/>
+
 
 </RelativeLayout>

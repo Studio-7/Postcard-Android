@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.squareup.picasso.Picasso
 import com.studioseven.postcard.Models.Image
 import com.studioseven.postcard.R
 import kotlinx.android.synthetic.main.item_image.view.*
@@ -16,16 +17,7 @@ class ImageAdapter(private val items: List<Image>) :
     // you provide access to all the views for a data item in a view holder.
     // Each data item is just a string in this case that is shown in a TextView.
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: Image) = with(itemView) {
-            imageView.setImageResource(R.drawable.abhi)
-        }
-    }
-
-    val clickListener = View.OnClickListener {view ->
-
-        when (view.getId()) {
-
-        }
+        val imageView = itemView.imageView
     }
 
 
@@ -41,7 +33,9 @@ class ImageAdapter(private val items: List<Image>) :
     }
 
     // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(items[position])
+    override fun onBindViewHolder(holder: ViewHolder, position: Int){
+        Picasso.get().load(items[position].url).into(holder.imageView)
+    }
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = items.size

@@ -63,11 +63,24 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         viewManager = LinearLayoutManager(view.context)
-        viewAdapter = PostcardAdapter(listOf(Postcard("abhishek", "Kanchi", 123, 30,
-                                        listOf("Hariharan", "Arko"),"2 days ago",
-                                    false, listOf(), ""), Postcard("arko", "Kanchi", 123, 30,
-            listOf("Hariharan", "Arko"),"2 days ago",
-            false, listOf(), "")), view.context)
+
+        val images: List<Image> = listOf(
+            Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrAzB3dynTfZ4CioA56_XksdHsXMZUZgv4HfSb5O9js5BBjEix"),
+            Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRh8mC7z2hVvA9ljM1NtgyxfROwyTGCcFOKYIXHSGxi__1KjX5m"),
+            Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd1Fh2z2i8_IzYyPhXgWMjaPMPNPcgYOQIMVwGrsRqGA2M1OoTlg"),
+            Image("https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM"),
+            Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS19FFqjUfKyZnx6K7g_YmnWQqHZ86ZodzbhDgwtQFH2rohNTvE"),
+            Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd1Fh2z2i8_IzYyPhXgWMjaPMPNPcgYOQIMVwGrsRqGA2M1OoTlg")
+        )
+
+        viewAdapter = PostcardAdapter(
+            listOf(Postcard("abhishek", "Kanchi", 123, 30,
+                    listOf("Hariharan", "Arko"),"2 days ago",
+                false, images, "https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM"),
+                    Postcard("arko", "Kanchi", 123, 30,
+                    listOf("Hariharan", "Arko"),"2 days ago",
+                false, images, "https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM"))
+            , view.context)
 
         recyclerView = view.postcardRv.apply {
             // use this setting to improve performance if you know that changes
@@ -80,16 +93,6 @@ class HomeFragment : Fragment() {
             // specify an viewAdapter (see also next example)
             adapter = viewAdapter
         }
-
-
-        val images: List<Image> = listOf(
-            Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRh8mC7z2hVvA9ljM1NtgyxfROwyTGCcFOKYIXHSGxi__1KjX5m"),
-            Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrAzB3dynTfZ4CioA56_XksdHsXMZUZgv4HfSb5O9js5BBjEix"),
-            Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd1Fh2z2i8_IzYyPhXgWMjaPMPNPcgYOQIMVwGrsRqGA2M1OoTlg"),
-            Image("https://www.washingtonpost.com/resizer/oLrhvDHWXoe3ycLXTe0PAcZlejk=/960x0/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/AWN2OZ75JQYHZOBKZAQL5NROZU.jpg"),
-            Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS19FFqjUfKyZnx6K7g_YmnWQqHZ86ZodzbhDgwtQFH2rohNTvE"),
-            Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd1Fh2z2i8_IzYyPhXgWMjaPMPNPcgYOQIMVwGrsRqGA2M1OoTlg")
-        )
 
         return view
     }
