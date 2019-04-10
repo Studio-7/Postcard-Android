@@ -6,6 +6,6 @@ package com.studioseven.postcard;
 
 public class Constants {
 
-    public static final String BASE_URL = "http://35.200.243.131:9000";
+    public static final String BASE_URL = "http://postcard.ga";
 
 }

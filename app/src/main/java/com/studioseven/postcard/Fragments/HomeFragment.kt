@@ -3,12 +3,17 @@ package com.studioseven.postcard.Fragments
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.studioseven.postcard.Adapters.ImageAdapter
+import com.studioseven.postcard.Adapters.PostcardAdapter
 import com.studioseven.postcard.Models.Image
+import com.studioseven.postcard.Models.Postcard
 import com.studioseven.postcard.R
+import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.item_postcard.*
 import kotlinx.android.synthetic.main.item_postcard.view.*
 
@@ -26,11 +31,17 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  *
  */
+
+
 class HomeFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +62,26 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
+        viewManager = LinearLayoutManager(view.context)
+        viewAdapter = PostcardAdapter(listOf(Postcard("abhishek", "Kanchi", 123, 30,
+                                        listOf("Hariharan", "Arko"),"2 days ago",
+                                    false, listOf(), ""), Postcard("arko", "Kanchi", 123, 30,
+            listOf("Hariharan", "Arko"),"2 days ago",
+            false, listOf(), "")), view.context)
+
+        recyclerView = view.postcardRv.apply {
+            // use this setting to improve performance if you know that changes
+            // in content do not change the layout size of the RecyclerView
+            setHasFixedSize(true)
+
+            // use a linear layout manager
+            layoutManager = viewManager
+
+            // specify an viewAdapter (see also next example)
+            adapter = viewAdapter
+        }
+
+
         val images: List<Image> = listOf(
             Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRh8mC7z2hVvA9ljM1NtgyxfROwyTGCcFOKYIXHSGxi__1KjX5m"),
             Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrAzB3dynTfZ4CioA56_XksdHsXMZUZgv4HfSb5O9js5BBjEix"),
@@ -59,19 +90,6 @@ class HomeFragment : Fragment() {
             Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS19FFqjUfKyZnx6K7g_YmnWQqHZ86ZodzbhDgwtQFH2rohNTvE"),
             Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd1Fh2z2i8_IzYyPhXgWMjaPMPNPcgYOQIMVwGrsRqGA2M1OoTlg")
         )
-
-        /*imageScroll.layoutManager = GridLayoutManager(this, 2)*/
-        view.imageScroll.adapter = ImageAdapter(images)
-        view.imageScroll.smoothScrollToPosition(3)
-
-        view.image_heart_white.setOnClickListener{
-            image_heart_white.visibility = View.INVISIBLE
-            image_heart_red.visibility = View.VISIBLE
-        }
-        view.image_heart_red.setOnClickListener{
-            image_heart_white.visibility = View.VISIBLE
-            image_heart_red.visibility = View.INVISIBLE
-        }
 
         return view
     }

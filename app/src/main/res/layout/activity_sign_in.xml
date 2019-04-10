@@ -1,130 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".Activities.SignInActivity"
-        android:orientation="vertical"
-        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-        android:layout_marginVertical="@dimen/activity_vertical_margin">
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Postcard"
-            android:textStyle="italic|bold"
-            android:fontFamily="casual"
-            android:textSize="50dp"
-            android:gravity="center"
-            android:layout_marginTop="20dp"
-            android:textColor="@color/purple_500"
-            />
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Dream. Explore. Discover"
-            android:gravity="center"
-            android:textSize="25dp"
-            android:textColor="@color/blue_200"
-            android:fontFamily="sans-serif"
-            android:layout_marginBottom="40dp"
-            />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".Activities.SignInActivity">
+
     <LinearLayout
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-            android:layout_marginBottom="30dp"
-            >
-
-    <EditText
-            android:id="@+id/Username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Username"
-            android:textSize="20dp"
-            android:textColor="@color/blue_200"
-            android:background="@drawable/round_edit_text"
-            android:padding="15dp"
-            android:layout_margin="10dp"
-
-            />
-    <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Password"
-            android:textSize="20dp"
-            android:textColor="@color/blue_200"
-            android:background="@drawable/round_edit_text"
-            android:padding="15dp"
-            android:layout_margin="10dp"
-
-            />
-
-    <Button
-            android:id="@+id/Login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/roundbutton"
-            android:textSize="25dp"
-            android:text=" LOG IN "
-            android:fontFamily="sans-serif"
-            android:textColor="@color/white"
-            android:padding="5dp"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            />
-    </LinearLayout>
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-    <View
-            android:layout_width="140dp"
-            android:layout_height="2dp"
-            android:background="@color/blue_200"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="15dp"/>
+            android:layout_marginVertical="@dimen/activity_vertical_margin">
         <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="OR"
-                android:textSize="20dp"
-                android:textColor="@color/blue_200"/>
-        <View
-                android:layout_width="140dp"
-                android:layout_height="2dp"
-                android:background="@color/blue_200"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="15dp"/>
+                android:text="Postcard"
+                android:textStyle="italic|bold"
+                android:fontFamily="casual"
+                android:textSize="50dp"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/purple_500"
+                />
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Dream. Explore. Discover"
+                android:gravity="center"
+                android:textSize="25dp"
+                android:textColor="@color/blue_200"
+                android:fontFamily="sans-serif"
+                android:layout_marginBottom="40dp"
+                />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="30dp"
+                >
+
+            <EditText
+                    android:id="@+id/Username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Username"
+                    android:textSize="20dp"
+                    android:textColor="@color/blue_200"
+                    android:background="@drawable/round_edit_text"
+                    android:padding="15dp"
+                    android:layout_margin="10dp"
+
+                    />
+            <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Password"
+                    android:textSize="20dp"
+                    android:inputType="textPassword"
+                    android:textColor="@color/blue_200"
+                    android:background="@drawable/round_edit_text"
+                    android:padding="15dp"
+                    android:layout_margin="10dp"
+
+                    />
+
+            <Button
+                    android:id="@+id/Login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/roundbutton"
+                    android:textSize="25sp"
+                    android:text=" LOG IN "
+                    android:fontFamily="sans-serif"
+                    android:textColor="@color/white"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    tools:targetApi="jelly_bean"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <View
+                    android:layout_width="140dp"
+                    android:layout_height="2dp"
+                    android:background="@color/blue_200"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OR"
+                    android:textSize="20sp"
+                    android:textColor="@color/blue_200"/>
+            <View
+                    android:layout_width="140dp"
+                    android:layout_height="2dp"
+                    android:background="@color/blue_200"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="15dp"/>
+
+        </LinearLayout>
+
+
+        <Button
+                android:id="@+id/googleLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:background="@drawable/roundbutton"
+                android:textSize="25sp"
+                android:fontFamily="sans-serif"
+                android:textColor="@color/white"
+                android:drawableTop="@drawable/google"
+                android:paddingTop="15dp"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+
+                tools:targetApi="jelly_bean"/>
+
 
     </LinearLayout>
 
-
-
-
-    <Button
-            android:id="@+id/googleLogin"
+    <ProgressBar
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:background="@drawable/roundbutton"
-            android:textSize="25dp"
-            android:fontFamily="sans-serif"
-            android:textColor="@color/white"
-            android:drawableTop="@drawable/google"
-            android:paddingTop="15dp"
-            android:layout_marginTop="30dp"
-            android:gravity="center"
-            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:id="@+id/progressBar"
+            android:visibility="gone"/>
 
-            />
-
-
-</LinearLayout>
-
+</RelativeLayout>

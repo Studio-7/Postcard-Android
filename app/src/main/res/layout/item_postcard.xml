@@ -5,14 +5,10 @@
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
         <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
+                android:layout_height="match_parent">
 
             <RelativeLayout
                     android:layout_width="match_parent"
@@ -37,12 +33,12 @@
                         android:layout_toRightOf="@+id/profile_photo">
 
                     <TextView
+                            android:id="@+id/usernameTv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="20sp"
                             android:text="divya21raj"
                             android:layout_marginLeft="10dp"
-                            android:id="@+id/username"
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             />
@@ -50,7 +46,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Kanchi"
-                            android:layout_below="@+id/username"
+                            android:layout_below="@+id/usernameTv"
                             android:layout_marginLeft="10dp"
                             android:textColor="@color/grey_800"
                             android:textSize="15sp"
@@ -73,14 +69,14 @@
 
             <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="400dp"
                     android:id="@+id/postBox"
                     android:background="@color/white"
                     android:layout_below="@+id/relLayout1">
 
                 <com.studioseven.postcard.Utils.SquareImageView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:id="@+id/postImage"
                         android:src="@drawable/abhi"
                         android:scaleType="centerCrop"/>
@@ -115,7 +111,7 @@
                             android:layout_marginLeft="20dp"
                             android:src="@drawable/ic_heart_red"
                             android:background="@color/transparent"
-                            android:visibility="visible"/>
+                            android:visibility="invisible"/>
 
                     <ImageView
                             android:layout_width="30dp"
@@ -199,9 +195,5 @@
             </RelativeLayout>
 
         </RelativeLayout>
-
-    </ScrollView>
-
-    <!--<include layout="@layout/layout_bottom_navigation_view"/>-->
 
 </RelativeLayout>

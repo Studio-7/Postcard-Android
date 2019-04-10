@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -15,20 +16,18 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.*;
+import com.studioseven.postcard.Network.RestAPI;
 import com.studioseven.postcard.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class SignInActivity extends AppCompatActivity {
     Button gbtn,obtn;
     EditText username,pass;
+    ProgressBar progressBar;
     String IdToken,user,fname,lname,email,result,token;
     private static final int RC_SIGN_IN=9001;
     GoogleApiClient mGoogleApiClient;
@@ -38,12 +37,12 @@ public class SignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+
         gbtn=findViewById(R.id.googleLogin);
         obtn=findViewById(R.id.Login);
         username=findViewById(R.id.Username);
         pass=findViewById(R.id.password);
-
-
+        progressBar = findViewById(R.id.progressBar);
 
         GoogleSignInOptions gso=new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.server_clientid))
@@ -51,9 +50,7 @@ public class SignInActivity extends AppCompatActivity {
                 .build();
 
 
-
         // RestAPI Code
-
 
         gbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +60,18 @@ public class SignInActivity extends AppCompatActivity {
 
 
         });
+
+        /*mAuthListener=new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser()!=null)
+                {
+                    Intent i=new Intent(SignInActivity.this,IntroActivity.class);
+                    startActivity(i);
+                    finish();
+                }
+            }
+        };*/
 
         obtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +101,6 @@ public class SignInActivity extends AppCompatActivity {
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
-
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -104,7 +112,7 @@ public class SignInActivity extends AppCompatActivity {
             if (result.isSuccess())
             {
                 GoogleSignInAccount account=result.getSignInAccount();
-                HandleSignIn(account);
+                handleSignIn(account);
 
             }
             else {
@@ -113,44 +121,40 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
-    private void  HandleSignIn(final GoogleSignInAccount account) {
-        String IdToken= account.getIdToken();
-        Log.d("DD",IdToken);
+    private void handleSignIn(final GoogleSignInAccount account) {
+        String idToken= account.getIdToken();
+        Log.d("DD",idToken);
         lname=account.getFamilyName();
         fname=account.getGivenName();
         email=account.getEmail();
-        String[] arr=email.split("@");
-        user=arr[0];
+        user=email.split("@")[0];
 
-        api_call(user,IdToken,fname,lname,email);
-
-
-        Toast.makeText(this, "Result is "+ result+ " jwt: "+ token, Toast.LENGTH_SHORT).show();
-
-     // Toast.makeText(this, " Username "+ user+" Lname : "+lname+" fname: "+fname+" email: "+email , Toast.LENGTH_LONG).show();
-        Intent i=new Intent(SignInActivity.this,IntroActivity.class);
-        startActivity(i);
-
-
+        api_call(user,idToken,fname,lname,email);
 
     }
 
     void api_call(String user,String IdToken,String fname,String lname,String email)
     {
+        progressBar.setVisibility(View.VISIBLE);
+
         RestAPI.Companion.getAppService().signUp(user,IdToken,fname,lname,email).enqueue(new Callback<Map<String, String>>() {
             @Override
             public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
-                Map<String, String> hm = new HashMap<>();
+                Map<String, String> hm;
                 hm = response.body();
                 result=hm.get("result");
                 token=hm.get("jwt");
+
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(SignInActivity.this, " REsult is "+result+ "  Token is "+token , Toast.LENGTH_SHORT).show();
 
+                Intent i=new Intent(SignInActivity.this,MainActivity.class);
+                startActivity(i);
             }
 
             @Override
             public void onFailure(Call<Map<String, String>> call, Throwable t) {
-
+                Toast.makeText(SignInActivity.this, "Failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
