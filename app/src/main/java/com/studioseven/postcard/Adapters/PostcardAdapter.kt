@@ -10,6 +10,9 @@ import com.studioseven.postcard.Models.Postcard
 import com.yarolegovich.discretescrollview.transform.Pivot
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer
 import kotlinx.android.synthetic.main.item_postcard.view.*
+import android.support.v4.content.ContextCompat.startActivity
+import android.content.Intent
+import com.studioseven.postcard.Activities.ImageScreenActivity
 
 
 class PostcardAdapter(private val postcardList: List<Postcard>, private val context: Context) :
@@ -55,6 +58,11 @@ class PostcardAdapter(private val postcardList: List<Postcard>, private val cont
         holder.locationTv.text = postcardList[position].location
 
         Picasso.get().load(postcardList[position].userImageLink).into(holder.userProfileImage)
+        holder.postImage.setOnClickListener{
+            val myIntent = Intent(context, ImageScreenActivity::class.java)
+            myIntent.putExtra("imageUrl", postcardList[position].mediaLinkList[holder.imageScroll.currentItem].url) //Optional parameters
+            context.startActivity(myIntent)
+        }
 
         holder.imageScroll.adapter = ImageAdapter(postcardList[position].mediaLinkList)
         holder.imageScroll.setItemTransformer(
