@@ -14,5 +14,11 @@ interface RestService {
                @Field("fname") fname: String,
                @Field("lname") lname: String,
                @Field("email") email: String): Call<Map<String, String>>
+
+    @POST("post/createtravelcapsule")
+    @FormUrlEncoded
+    fun createCapsule(@Field("token") token : String,
+                      @Field("username") username: String,
+                      @Field("title") title: String): Call<Map<String, String>>
 }
 
