@@ -75,5 +75,8 @@ dependencies {
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+
+    //Anko for async tasks
+    implementation "org.jetbrains.anko:anko-commons:0.10.4"
 }
 apply plugin: 'kotlin-android-extensions'
