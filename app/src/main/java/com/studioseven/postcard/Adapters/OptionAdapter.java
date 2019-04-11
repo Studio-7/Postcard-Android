@@ -52,7 +52,7 @@ public class OptionAdapter extends RecyclerView.Adapter<OptionAdapter.OptionView
     public void onBindViewHolder(@NonNull final OptionViewHolder holder, final int i) {
         final Options article = mOptionList.get(i);
         holder.title.setText(article.getOption());
-        Glide.with(mContext).load(article.getThumbnail()).into(holder.article_thumbnail);
+        Glide.with(mContext).load(article.getimageUrl()).into(holder.article_thumbnail);
         holder.cardView.setSelected(selectedItems.get(i, false));
 
         HashSet<String> set = new HashSet<>();

@@ -1,11 +1,10 @@
-package com.studioseven.postcard.Adapter
+package com.studioseven.postcard.Adapters
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import com.studioseven.postcard.Models.Options
 import com.studioseven.postcard.Fragments.QuestionFragment
-import com.studioseven.postcard.R
+import com.studioseven.postcard.Models.Options
 
 class PagerAdapter internal constructor(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
     override fun getItem(p0: Int): Fragment? {
@@ -18,6 +17,9 @@ class PagerAdapter internal constructor(fragmentManager: FragmentManager) : Frag
         val list = ArrayList<Options>()
         list.add(options)
         list.add(option2)
+        list.add(option3)
+        list.add(option4)
+        list.add(option5)
         when(p0){
             0 -> return QuestionFragment.newInstance("This is my question", list, 0)
             1 -> return QuestionFragment.newInstance("This is my second question", list, 1)

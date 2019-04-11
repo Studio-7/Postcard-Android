@@ -77,6 +77,13 @@ class PostcardAdapter(private val postcardList: List<Postcard>, private val cont
         Picasso.get().load(postcardList[position].mediaLinkList[holder.imageScroll.currentItem].url)
             .into(holder.postImage)
 
+
+
+        /*holder.imageScroll.addOnItemChangedListener{
+            Picasso.get().load(postcardList[position].mediaLinkList[holder.imageScroll.currentItem].url)
+                .into(holder.postImage)
+        }*/
+
         holder.image_heart_white.setOnClickListener {
             holder.image_heart_white.visibility = View.INVISIBLE
             holder.image_heart_red.visibility = View.VISIBLE
