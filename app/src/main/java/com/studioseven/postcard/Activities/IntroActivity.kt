@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.studioseven.postcard.Adapters.PagerAdapter
 import com.studioseven.postcard.R
 import com.studioseven.postcard.Utils.NonSwipeableViewPager
 
@@ -21,7 +22,7 @@ import com.studioseven.postcard.Utils.NonSwipeableViewPager
 class IntroActivity : AppCompatActivity() {
 
     private lateinit var viewPager: NonSwipeableViewPager
-    private lateinit var pagerAdapter: com.studioseven.postcard.Adapter.PagerAdapter
+    private lateinit var pagerAdapter: PagerAdapter
     private lateinit var intro_1: ImageView
     private lateinit var intro_2: ImageView
     private lateinit var intro_3: ImageView
@@ -35,7 +36,7 @@ class IntroActivity : AppCompatActivity() {
         sharedpreferences = getSharedPreferences("shared", Context.MODE_PRIVATE)
 
         viewPager = findViewById(R.id.pager)
-        pagerAdapter = com.studioseven.postcard.Adapter.PagerAdapter(supportFragmentManager)
+        pagerAdapter = PagerAdapter(supportFragmentManager)
         viewPager.adapter = pagerAdapter
 
         intro_1 = findViewById(R.id.intro1)

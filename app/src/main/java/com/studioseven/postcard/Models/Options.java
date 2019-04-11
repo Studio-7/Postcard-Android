@@ -5,18 +5,18 @@ import android.os.Parcelable;
 
 public class Options implements Parcelable{
     private String option;
-    private int thumbnail;
+    private String imageUrl;
     private int id;
 
-    public Options(String option, int thumbnail, int id) {
+    public Options(String option, String imageUrl, int id) {
         this.option = option;
-        this.thumbnail = thumbnail;
+        this.imageUrl = imageUrl;
         this.id = id;
     }
 
     protected Options(Parcel in) {
         option = in.readString();
-        thumbnail = in.readInt();
+        imageUrl = in.readString();
     }
 
     public static final Creator<Options> CREATOR = new Creator<Options>() {
@@ -35,8 +35,8 @@ public class Options implements Parcelable{
         return option;
     }
 
-    public int getThumbnail() {
-        return thumbnail;
+    public String getimageUrl() {
+        return imageUrl;
     }
 
     @Override
@@ -47,6 +47,6 @@ public class Options implements Parcelable{
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(option);
-        parcel.writeInt(thumbnail);
+        parcel.writeString(imageUrl);
     }
 }

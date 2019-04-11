@@ -147,7 +147,7 @@ public class SignInActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 Toast.makeText(SignInActivity.this, " REsult is "+result+ "  Token is "+token , Toast.LENGTH_SHORT).show();
 
-                Intent i=new Intent(SignInActivity.this,MainActivity.class);
+                Intent i=new Intent(SignInActivity.this,IntroActivity.class);
                 startActivity(i);
             }
 
