@@ -4,8 +4,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="card_album_radius">5dp</dimen>
-    <dimen name="card_margin">5dp</dimen>
-    <dimen name="image_height">160dp</dimen>
+    <dimen name="card_margin">10dp</dimen>
+    <dimen name="image_height">140dp</dimen>
     <dimen name="title_padding">10dp</dimen>
     <dimen name="title">15dp</dimen>
 
