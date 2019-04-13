@@ -1,9 +1,9 @@
 package com.studioseven.postcard.Network
 
-import io.reactivex.Observable
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
-import java.util.concurrent.Callable
 
 interface RestService {
 
@@ -20,5 +20,14 @@ interface RestService {
     fun createCapsule(@Field("token") token : String,
                       @Field("username") username: String,
                       @Field("title") title: String): Call<Map<String, String>>
+
+    @POST("/post/createpost")
+    @Multipart
+    fun postMedia(@Part("token") token : RequestBody,
+                  @Part("username") username: RequestBody,
+                  @Part("title") title: RequestBody,
+                  @Part("message") message: RequestBody,
+                  @Part file: MultipartBody.Part,
+                  @Part("travelcapsule") id: RequestBody): Call<Map<String, String>>
 }
 

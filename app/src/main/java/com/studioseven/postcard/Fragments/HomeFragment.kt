@@ -8,7 +8,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
+import android.os.Environment
 import android.support.annotation.RequiresApi
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityCompat
@@ -24,23 +24,23 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
-import com.studioseven.postcard.Adapters.ImageAdapter
 import com.studioseven.postcard.Adapters.PostcardAdapter
 import com.studioseven.postcard.Models.Image
 import com.studioseven.postcard.Models.Postcard
 import com.studioseven.postcard.Network.RestAPI
 import com.studioseven.postcard.R
 import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.android.synthetic.main.item_postcard.*
-import kotlinx.android.synthetic.main.item_postcard.view.*
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.onComplete
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -170,27 +170,22 @@ class HomeFragment : Fragment() {
         (if (resultCode == Activity.RESULT_OK && requestCode == 1) {
             val selectedMediaUri: ClipData? = data!!.clipData
             if (selectedMediaUri != null) {
-                createCapsule()
-                for (i in 0..(selectedMediaUri.itemCount - 1)) {
-                    Log.d("TAG", selectedMediaUri.getItemAt(i).uri.toString())
-                    if (!selectedMediaUri.getItemAt(i).uri.toString().contains(".mp4")) {
-                        val bitmap = MediaStore.Images.Media.getBitmap(context!!.contentResolver, selectedMediaUri.getItemAt(i).uri)
-                        makeAPICallImage(bitmap)
-                    } else {
-                        makeAPICallVideo(selectedMediaUri.getItemAt(i).uri)
-                    }
-                }
-
+                createCapsule(selectedMediaUri)
             }
         } else if (resultCode == Activity.RESULT_OK && requestCode == 2) {
             var imageBitmap: Bitmap = data!!.extras.get("data") as Bitmap
-            makeAPICallImage(imageBitmap)
+            //makeAPICallImage(imageBitmap)
+            if(isExternalStorageWritable()){
+                var uri: Uri = saveImage(imageBitmap)
+                Log.d("TAG", uri.toString())
+                makeAPICallImage(uri)
+            }
 
         })
     }
 
-    fun createCapsule(){
-        RestAPI.getAppService().createCapsule("am9obndpY2s=.SXhDWlhnTXhteEx5QVRIT21JTXhCUGZsem5Genp6bm4=.OEQvMTlUY0QyMmkvaXo4NWZIbjdsYnFqaTVTV0RZOFY2b0VrWUFhd0RkYz0=", "johnwick", capsuleTitle!!)
+    fun createCapsule(selectedMediaUri :ClipData){
+        RestAPI.getAppService().createCapsule("am9obndpY2s=.RmxIb3FZU0h1Y2Jpa1F4Sk9rd3piY0x5c29VSHp5UVo=.Y2hBZzdOYVY4UVRQL0psYjY5ZVV1WEpGbmRBMTFNSUdnQUdLUWV0Q3lQZz0=", "johnwick", capsuleTitle!!)
             .enqueue(object : Callback<Map<String, String>> {
                 override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
                     Log.d("TAG", "Failed")
@@ -199,51 +194,123 @@ class HomeFragment : Fragment() {
                 override fun onResponse(call: Call<Map<String, String>>, response: Response<Map<String, String>>) {
                     capsuleId = response.body()!!["travelcapsule"]
                     token = response.body()!!["token"]
-                    Log.d("TAG", response.body().toString())
+                    //Log.d("TAG", token)
+                    for (i in 0..(selectedMediaUri.itemCount - 1)) {
+                        Log.d("TAG", selectedMediaUri.getItemAt(i).uri.toString())
+                        if (!selectedMediaUri.getItemAt(i).uri.toString().contains(".mp4")) {
+                            //val bitmap = MediaStore.Images.Media.getBitmap(context!!.contentResolver, selectedMediaUri.getItemAt(i).uri)
+                            makeAPICallImage(selectedMediaUri.getItemAt(i).uri)
+                        } else {
+                            makeAPICallVideo(selectedMediaUri.getItemAt(i).uri)
+                        }
+                    }
+
                 }
             })
     }
 
     // convert all images to byteArrays and send to server
-    fun makeAPICallImage(image: Bitmap){
+    fun makeAPICallImage(imageUri :Uri){
         doAsync {
-            var stream: ByteArrayOutputStream = ByteArrayOutputStream()
-            image.compress(Bitmap.CompressFormat.PNG, 100, stream)
-            var byteArray: ByteArray = stream.toByteArray()
-            image.recycle()
-            onComplete {
-                Log.d("TAG", byteArray.toString())
-                //make API call
-            }
+            var file: File = File(imageUri.path)
+            Log.d("TAG", file.toString())
+            var requestFile: RequestBody = RequestBody.create(
+                MediaType.parse("image/jpeg"),
+                         file
+             )
+            var body: MultipartBody.Part = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+            var tokenRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, token)
+            var usernameRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, "johnwick")
+            var titleRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleTitle)
+            var messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, "First Capsule")
+            var idRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleId)
+            RestAPI.getAppService()
+                .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody)
+                .enqueue(object : Callback<Map<String, String>> {
+                    override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
+                        Log.d("TAG", t.message)
+                    }
+                    override fun onResponse(
+                        call: Call<Map<String, String>>,
+                        response: Response<Map<String, String>>
+                    ) {
+                        capsuleId = response.body()!!["travelcapsule"]
+                        token = response.body()!!["token"]
+                        Log.d("TAG", response.body().toString())
+                    }
 
-        }
+                })
+            }
     }
 
     //convert all videos to byteArray and send to server
     fun makeAPICallVideo(uri: Uri) {
         doAsync {
-            var videoBytes: ByteArray? = null
-            var outputStream = ByteArrayOutputStream()
-            var file: File = File(uri.path)
-            var fileStream = FileInputStream(file)
-            var n: Int
-            var buffer: ByteArray = ByteArray(1024)
-            n = fileStream.read(buffer)
-            while(n != -1){
-                outputStream.write(buffer, 0, n)
-                n = fileStream.read(buffer)
-            }
-            videoBytes = outputStream.toByteArray()
 
-            onComplete {
-                Log.d("TAG", videoBytes.toString())
-                //make API call video
-            }
+            var file: File = File(uri.path)
+            Log.d("TAG", file.toString())
+            var requestFile: RequestBody = RequestBody.create(
+                MediaType.parse("video/*"),
+                file
+            )
+            var body: MultipartBody.Part = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+            var tokenRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, token)
+            var usernameRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, "johnwick")
+            var titleRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleTitle)
+            var messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, "First Capsule")
+            var idRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleId)
+            RestAPI.getAppService()
+                .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody)
+                .enqueue(object : Callback<Map<String, String>> {
+                    override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
+                        Log.d("TAG", t.message)
+                    }
+                    override fun onResponse(
+                        call: Call<Map<String, String>>,
+                        response: Response<Map<String, String>>
+                    ) {
+                        capsuleId = response.body()!!["travelcapsule"]
+                        token = response.body()!!["token"]
+                        Log.d("TAG", response.body().toString())
+                    }
+
+                })
         }
 
 
     }
 
+
+    fun saveImage(finalBitmap: Bitmap): Uri {
+
+        var root: String = Environment.getExternalStorageDirectory().toString()
+        var myDir: File = File(root + "/Postcard")
+        myDir.mkdirs()
+
+        var timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        var fname: String = "image_"+ timeStamp +".jpg"
+
+        var file: File = File(myDir, fname)
+        if (file.exists()) file.delete ()
+        try {
+            var out: FileOutputStream = FileOutputStream(file)
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+            out.flush()
+            out.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return Uri.fromFile(file)
+    }
+
+    /* Checks if external storage is available for read and write */
+    fun isExternalStorageWritable(): Boolean {
+        var state: String = Environment.getExternalStorageState()
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true
+        }
+        return false
+    }
 
     fun isStoragePermissionGranted(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
