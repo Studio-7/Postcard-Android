@@ -111,8 +111,8 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:id="@+id/image_heart_red"
-                    android:layout_marginLeft="20dp"
-                    android:src="@drawable/ic_heart_red"
+                    android:layout_marginLeft="19dp"
+                    app:srcCompat="@drawable/vector_heart_red"
                     android:background="@color/transparent"
                     android:visibility="invisible"/>
 

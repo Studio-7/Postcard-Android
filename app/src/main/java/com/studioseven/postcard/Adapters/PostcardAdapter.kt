@@ -1,18 +1,17 @@
 package com.studioseven.postcard.Adapters
 
 import android.content.Context
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
+import com.studioseven.postcard.Activities.ImageScreenActivity
 import com.studioseven.postcard.Models.Postcard
 import com.yarolegovich.discretescrollview.transform.Pivot
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer
 import kotlinx.android.synthetic.main.item_postcard.view.*
-import android.support.v4.content.ContextCompat.startActivity
-import android.content.Intent
-import com.studioseven.postcard.Activities.ImageScreenActivity
 
 
 class PostcardAdapter(private val postcardList: List<Postcard>, private val context: Context) :

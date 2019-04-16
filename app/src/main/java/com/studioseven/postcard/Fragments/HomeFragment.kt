@@ -79,10 +79,6 @@ class HomeFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
-        /*Picasso.get().load("https://ichef.bbci.co.uk/news/660/cpsprodpb/E9DF/production/_96317895_gettyimages-164067218.jpg")
-            .into(postImage)*/
-
     }
 
     override fun onCreateView(
@@ -90,6 +86,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         isStoragePermissionGranted()
+
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
@@ -124,14 +121,15 @@ class HomeFragment : Fragment() {
             // specify an viewAdapter (see also next example)
             adapter = viewAdapter
         }
+
         //Bottom sheet
-        var fab : FloatingActionButton = view?.findViewById(R.id.floating)!!
+        val fab : FloatingActionButton = view?.findViewById(R.id.floating)!!
         fab.setOnClickListener {
-            var builder = AlertDialog.Builder(context!!)
+            val builder = AlertDialog.Builder(context!!)
             builder.setTitle("Capsule Title: " )
             builder.setMessage("Enter the title for your travel capsule")
-            var input: EditText = EditText(context)
-            var lp: LinearLayout.LayoutParams  = LinearLayout.LayoutParams(
+            val input: EditText = EditText(context)
+            val lp: LinearLayout.LayoutParams  = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT)
             input.setLayoutParams(lp)
@@ -173,10 +171,10 @@ class HomeFragment : Fragment() {
                 createCapsule(selectedMediaUri)
             }
         } else if (resultCode == Activity.RESULT_OK && requestCode == 2) {
-            var imageBitmap: Bitmap = data!!.extras.get("data") as Bitmap
+            val imageBitmap: Bitmap = data!!.extras.get("data") as Bitmap
             //makeAPICallImage(imageBitmap)
             if(isExternalStorageWritable()){
-                var uri: Uri = saveImage(imageBitmap)
+                val uri: Uri = saveImage(imageBitmap)
                 Log.d("TAG", uri.toString())
                 makeAPICallImage(uri)
             }
@@ -212,18 +210,19 @@ class HomeFragment : Fragment() {
     // convert all images to byteArrays and send to server
     fun makeAPICallImage(imageUri :Uri){
         doAsync {
-            var file: File = File(imageUri.path)
+            val file = File(imageUri.path)
             Log.d("TAG", file.toString())
-            var requestFile: RequestBody = RequestBody.create(
+            val requestFile: RequestBody = RequestBody.create(
                 MediaType.parse("image/jpeg"),
                          file
              )
-            var body: MultipartBody.Part = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-            var tokenRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, token)
-            var usernameRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, "johnwick")
-            var titleRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleTitle)
-            var messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, "First Capsule")
-            var idRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleId)
+            val body: MultipartBody.Part = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+            val tokenRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, token)
+            val usernameRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, "johnwick")
+            val titleRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleTitle)
+            val messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, "First Capsule")
+            val idRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleId)
+
             RestAPI.getAppService()
                 .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody)
                 .enqueue(object : Callback<Map<String, String>> {
@@ -247,18 +246,19 @@ class HomeFragment : Fragment() {
     fun makeAPICallVideo(uri: Uri) {
         doAsync {
 
-            var file: File = File(uri.path)
+            val file = File(uri.path)
             Log.d("TAG", file.toString())
-            var requestFile: RequestBody = RequestBody.create(
+            val requestFile: RequestBody = RequestBody.create(
                 MediaType.parse("video/*"),
                 file
             )
-            var body: MultipartBody.Part = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-            var tokenRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, token)
-            var usernameRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, "johnwick")
-            var titleRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleTitle)
-            var messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, "First Capsule")
-            var idRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleId)
+            val body: MultipartBody.Part = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+            val tokenRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, token)
+            val usernameRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, "johnwick")
+            val titleRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleTitle)
+            val messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, "First Capsule")
+            val idRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleId)
+
             RestAPI.getAppService()
                 .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody)
                 .enqueue(object : Callback<Map<String, String>> {
@@ -283,17 +283,17 @@ class HomeFragment : Fragment() {
 
     fun saveImage(finalBitmap: Bitmap): Uri {
 
-        var root: String = Environment.getExternalStorageDirectory().toString()
-        var myDir: File = File(root + "/Postcard")
+        val root: String = Environment.getExternalStorageDirectory().toString()
+        val myDir: File = File(root + "/Postcard")
         myDir.mkdirs()
 
-        var timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        var fname: String = "image_"+ timeStamp +".jpg"
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val fname: String = "image_"+ timeStamp +".jpg"
 
-        var file: File = File(myDir, fname)
+        val file: File = File(myDir, fname)
         if (file.exists()) file.delete ()
         try {
-            var out: FileOutputStream = FileOutputStream(file)
+            val out: FileOutputStream = FileOutputStream(file)
             finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
             out.flush()
             out.close()
@@ -305,7 +305,7 @@ class HomeFragment : Fragment() {
 
     /* Checks if external storage is available for read and write */
     fun isExternalStorageWritable(): Boolean {
-        var state: String = Environment.getExternalStorageState()
+        val state: String = Environment.getExternalStorageState()
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             return true
         }
@@ -314,7 +314,7 @@ class HomeFragment : Fragment() {
 
     fun isStoragePermissionGranted(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context!!, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) === PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(context!!, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 Log.v("TAG", "Permission is granted")
                 return true
             } else {

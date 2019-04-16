@@ -1,6 +1,8 @@
 package com.studioseven.postcard.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +30,7 @@ public class SignInActivity extends AppCompatActivity {
     Button gbtn,obtn;
     EditText username,pass;
     ProgressBar progressBar;
-    String IdToken,user,fname,lname,email,result,token;
+    String idToken,user,fname,lname,email,result,token;
     private static final int RC_SIGN_IN=9001;
     GoogleApiClient mGoogleApiClient;
 
@@ -67,7 +69,7 @@ public class SignInActivity extends AppCompatActivity {
                 if (firebaseAuth.getCurrentUser()!=null)
                 {
                     Intent i=new Intent(SignInActivity.this,IntroActivity.class);
-                    startActivity(i);
+                    handleResponse(i);
                     finish();
                 }
             }
@@ -77,11 +79,11 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 user=username.getText().toString();
-                IdToken=pass.getText().toString();
+                idToken =pass.getText().toString();
                 fname="fname";
                 lname="lname";
                 email="email";
-                api_call(user,IdToken,fname,lname,email);
+                signUpApiCal(user, idToken,fname,lname,email);
             }
         });
 
@@ -128,27 +130,25 @@ public class SignInActivity extends AppCompatActivity {
         email=account.getEmail();
         user=email.split("@")[0];
 
-        api_call(user,idToken,fname,lname,email);
+        // Sign up for the first time, else sign in
+        SharedPreferences sharedPreferences = getSharedPreferences("Auth", Context.MODE_PRIVATE);
+        if(!sharedPreferences.getBoolean("SIGNEDUP", false)){
+            sharedPreferences.edit().putBoolean("SIGNEDUP", true).apply();
+            signUpApiCal(user,idToken,fname,lname,email);
+        }
+        else signInApiCall(user,idToken);
 
     }
 
-    void api_call(String user,String IdToken,String fname,String lname,String email)
-    {
+    private void signUpApiCal(final String user, final String idToken, String fname, String lname, String email) {
         progressBar.setVisibility(View.VISIBLE);
+        Toast.makeText(this, "Signing Up...", Toast.LENGTH_SHORT).show();
 
-        RestAPI.Companion.getAppService().signUp(user,IdToken,fname,lname,email).enqueue(new Callback<Map<String, String>>() {
+        RestAPI.Companion.getAppService().signUp(user,idToken,fname,lname,email).enqueue(new Callback<Map<String, String>>() {
             @Override
             public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
-                Map<String, String> hm;
-                hm = response.body();
-                result=hm.get("result");
-                token=hm.get("jwt");
-
-                progressBar.setVisibility(View.GONE);
-                Toast.makeText(SignInActivity.this, " REsult is "+result+ "  Token is "+token , Toast.LENGTH_SHORT).show();
-
-                Intent i=new Intent(SignInActivity.this,IntroActivity.class);
-                startActivity(i);
+                if(response.body().get("error").contains("already"))  signInApiCall(user,idToken);
+                else handleResponse(response);
             }
 
             @Override
@@ -156,6 +156,36 @@ public class SignInActivity extends AppCompatActivity {
                 Toast.makeText(SignInActivity.this, "Failed", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    void signInApiCall(String user,String idToken) {
+        progressBar.setVisibility(View.VISIBLE);
+        Toast.makeText(this, "Signing In...", Toast.LENGTH_SHORT).show();
+
+        RestAPI.Companion.getAppService().signIn(user, idToken).enqueue(new Callback<Map<String, String>>() {
+            @Override
+            public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+                handleResponse(response);
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, String>> call, Throwable t) {
+                Toast.makeText(SignInActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void handleResponse(Response<Map<String, String>> response) {
+        Map<String, String> hm;
+        hm = response.body();
+        result=hm.get("result");
+        token=hm.get("jwt");
+
+        progressBar.setVisibility(View.GONE);
+        Toast.makeText(SignInActivity.this, " Result is "+result+ "  Token is "+token , Toast.LENGTH_SHORT).show();
+
+        Intent i=new Intent(SignInActivity.this, IntroActivity.class);
+        startActivity(i);
     }
 }
 
