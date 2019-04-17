@@ -20,6 +20,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.studioseven.postcard.Network.RestAPI;
 import com.studioseven.postcard.R;
+import com.studioseven.postcard.Utils.LocalStorageHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,10 +31,14 @@ public class SignInActivity extends AppCompatActivity {
     Button gbtn,obtn;
     EditText username,pass;
     ProgressBar progressBar;
-    String idToken,user,fname,lname,email,result,token;
+
+    String idToken, userId,fname,lname,email,result,token;
+
     private static final int RC_SIGN_IN=9001;
+
     GoogleApiClient mGoogleApiClient;
 
+    LocalStorageHelper localStorageHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +56,7 @@ public class SignInActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
 
+        localStorageHelper = new LocalStorageHelper(this);
 
         // RestAPI Code
 
@@ -78,12 +84,12 @@ public class SignInActivity extends AppCompatActivity {
         obtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                user=username.getText().toString();
+                userId =username.getText().toString();
                 idToken =pass.getText().toString();
                 fname="fname";
                 lname="lname";
                 email="email";
-                signUpApiCal(user, idToken,fname,lname,email);
+                signUpApiCal(userId, idToken,fname,lname,email);
             }
         });
 
@@ -128,15 +134,22 @@ public class SignInActivity extends AppCompatActivity {
         lname=account.getFamilyName();
         fname=account.getGivenName();
         email=account.getEmail();
-        user=email.split("@")[0];
+        userId=email.split("@")[0];
+
+        // Save profile info locally
+        localStorageHelper.updateToken(idToken);
+        localStorageHelper.updateFname(fname);
+        localStorageHelper.updateLname(lname);
+        localStorageHelper.updateEmail(email);
+        localStorageHelper.updateUserId(userId);
 
         // Sign up for the first time, else sign in
         SharedPreferences sharedPreferences = getSharedPreferences("Auth", Context.MODE_PRIVATE);
         if(!sharedPreferences.getBoolean("SIGNEDUP", false)){
             sharedPreferences.edit().putBoolean("SIGNEDUP", true).apply();
-            signUpApiCal(user,idToken,fname,lname,email);
+            signUpApiCal(userId,idToken,fname,lname,email);
         }
-        else signInApiCall(user,idToken);
+        else signInApiCall(userId,idToken);
 
     }
 
@@ -180,6 +193,9 @@ public class SignInActivity extends AppCompatActivity {
         hm = response.body();
         result=hm.get("result");
         token=hm.get("jwt");
+
+        //update token in local storage
+        localStorageHelper.updateToken(token);
 
         progressBar.setVisibility(View.GONE);
         Toast.makeText(SignInActivity.this, " Result is "+result+ "  Token is "+token , Toast.LENGTH_SHORT).show();

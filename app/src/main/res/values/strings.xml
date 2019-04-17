@@ -13,5 +13,11 @@
     <string name="tv_heading">Complete action with:</string>
     <string name="gallery">Gallery</string>
     <string name="camera">Camera</string>
+    <string name="profile_file_key">com.studioseven.postcard.profile</string>
+    <string name="token_key">token</string>
+    <string name="lname_key">lname</string>
+    <string name="fname_key">fname</string>
+    <string name="email_key">email</string>
+    <string name="userid_key">userId</string>
 
 </resources>
