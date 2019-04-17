@@ -94,11 +94,11 @@ class HomeFragment : Fragment() {
 
         val images: List<Image> = listOf(
             Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrAzB3dynTfZ4CioA56_XksdHsXMZUZgv4HfSb5O9js5BBjEix"),
-            Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRh8mC7z2hVvA9ljM1NtgyxfROwyTGCcFOKYIXHSGxi__1KjX5m"),
-            Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd1Fh2z2i8_IzYyPhXgWMjaPMPNPcgYOQIMVwGrsRqGA2M1OoTlg"),
+            Image("https://images-na.ssl-images-amazon.com/images/I/71Lo6ZgNLrL._SL1200_.jpg"),
+            Image("https://i.pinimg.com/originals/be/86/1b/be861bdfb1a6f38395c426123efa6ee6.jpg"),
             Image("https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM"),
             Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS19FFqjUfKyZnx6K7g_YmnWQqHZ86ZodzbhDgwtQFH2rohNTvE"),
-            Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd1Fh2z2i8_IzYyPhXgWMjaPMPNPcgYOQIMVwGrsRqGA2M1OoTlg")
+            Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFaEOzIwdDMy5O5m7t5qMnQVIbU5WVpfxaD40PoI528PIPOLQQcg")
         )
 
         viewAdapter = PostcardAdapter(

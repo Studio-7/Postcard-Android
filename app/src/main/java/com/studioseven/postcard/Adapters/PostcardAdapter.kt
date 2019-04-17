@@ -2,6 +2,8 @@ package com.studioseven.postcard.Adapters
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -9,13 +11,15 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import com.studioseven.postcard.Activities.ImageScreenActivity
 import com.studioseven.postcard.Models.Postcard
+import com.yarolegovich.discretescrollview.DiscreteScrollView
 import com.yarolegovich.discretescrollview.transform.Pivot
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer
 import kotlinx.android.synthetic.main.item_postcard.view.*
 
 
 class PostcardAdapter(private val postcardList: List<Postcard>, private val context: Context) :
-    RecyclerView.Adapter<PostcardAdapter.MyViewHolder>(){
+    RecyclerView.Adapter<PostcardAdapter.MyViewHolder>(),
+    DiscreteScrollView.OnItemChangedListener<ImageAdapter.ViewHolder> {
 
     var currentPos: Int = 0
 
@@ -33,12 +37,12 @@ class PostcardAdapter(private val postcardList: List<Postcard>, private val cont
         val image_heart_red = view.image_heart_red
     }
 
+    lateinit var myViewHolder: MyViewHolder
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
-    ): PostcardAdapter.MyViewHolder {
+        viewType: Int): MyViewHolder {
         // create a new view
         val view = LayoutInflater.from(parent.context)
             .inflate(com.studioseven.postcard.R.layout.item_postcard, parent, false)
@@ -48,10 +52,13 @@ class PostcardAdapter(private val postcardList: List<Postcard>, private val cont
     }
 
     // Replace the contents of a view (invoked by the layout manager)
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         currentPos = position
+
+        //myViewHolder = holder
 
         holder.userNameTv.text = postcardList[position].userName
         holder.locationTv.text = postcardList[position].location
@@ -72,16 +79,14 @@ class PostcardAdapter(private val postcardList: List<Postcard>, private val cont
                 .setPivotY(Pivot.Y.CENTER) // CENTER is a default one
                 .build()
         )
+        holder.imageScroll.addOnItemChangedListener(this)
+        holder.imageScroll.setOnScrollChangeListener { view: View, i: Int, i1: Int, i2: Int, i3: Int ->
+            myViewHolder = holder
+        }
 
         Picasso.get().load(postcardList[position].mediaLinkList[holder.imageScroll.currentItem].url)
             .into(holder.postImage)
 
-
-
-        /*holder.imageScroll.addOnItemChangedListener{
-            Picasso.get().load(postcardList[position].mediaLinkList[holder.imageScroll.currentItem].url)
-                .into(holder.postImage)
-        }*/
 
         holder.image_heart_white.setOnClickListener {
             holder.image_heart_white.visibility = View.INVISIBLE
@@ -90,6 +95,14 @@ class PostcardAdapter(private val postcardList: List<Postcard>, private val cont
         holder.image_heart_red.setOnClickListener {
             holder.image_heart_white.visibility = View.VISIBLE
             holder.image_heart_red.visibility = View.INVISIBLE
+        }
+    }
+
+    override fun onCurrentItemChanged(holder: ImageAdapter.ViewHolder?, position: Int) {
+        //viewHolder will never be null, because we never remove items from adapter's list
+        if (holder != null) {
+            Picasso.get().load(postcardList[myViewHolder.adapterPosition].mediaLinkList[myViewHolder.imageScroll.currentItem].url)
+                .into(myViewHolder.postImage)
         }
     }
 

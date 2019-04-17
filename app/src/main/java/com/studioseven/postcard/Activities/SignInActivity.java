@@ -102,6 +102,8 @@ public class SignInActivity extends AppCompatActivity {
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
                 .build();
+
+        startActivity(new Intent(this, MainActivity.class));
     }
 
 
