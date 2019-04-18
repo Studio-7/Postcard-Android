@@ -51,7 +51,6 @@
                     android:background="@drawable/round_edit_text"
                     android:padding="15dp"
                     android:layout_margin="10dp"
-
                     />
             <EditText
                     android:id="@+id/password"
@@ -81,6 +80,7 @@
                     android:layout_gravity="center"
                     android:layout_margin="10dp"
                     tools:targetApi="jelly_bean"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -89,8 +89,9 @@
                 android:orientation="horizontal">
 
             <View
-                    android:layout_width="140dp"
+                    android:layout_width="0dp"
                     android:layout_height="2dp"
+                    android:layout_weight="1"
                     android:background="@color/blue_200"
                     android:layout_marginRight="10dp"
                     android:layout_marginLeft="10dp"
@@ -102,8 +103,9 @@
                     android:textSize="20sp"
                     android:textColor="@color/blue_200"/>
             <View
-                    android:layout_width="140dp"
+                    android:layout_width="0dp"
                     android:layout_height="2dp"
+                    android:layout_weight="1"
                     android:background="@color/blue_200"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
@@ -111,23 +113,17 @@
 
         </LinearLayout>
 
-
-        <Button
-                android:id="@+id/googleLogin"
-                android:layout_width="wrap_content"
+        <ImageView
+                android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@drawable/roundbutton"
-                android:textSize="25sp"
-                android:fontFamily="sans-serif"
-                android:textColor="@color/white"
-                android:drawableTop="@drawable/google"
-                android:paddingTop="15dp"
+                android:id="@+id/googleLogin"
+                android:background="@drawable/ic_gbutton"
                 android:layout_marginTop="30dp"
                 android:gravity="center"
                 android:layout_gravity="center"
-
-                tools:targetApi="jelly_bean"/>
-
+                android:clickable="true"
+                tools:targetApi="jelly_bean"
+                android:focusable="true"/>
 
     </LinearLayout>
 

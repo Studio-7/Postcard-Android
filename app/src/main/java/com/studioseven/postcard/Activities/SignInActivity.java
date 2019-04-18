@@ -8,10 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.*;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -28,7 +25,8 @@ import retrofit2.Response;
 import java.util.Map;
 
 public class SignInActivity extends AppCompatActivity {
-    Button gbtn,obtn;
+    Button obtn;
+    ImageView gbtn;
     EditText username,pass;
     ProgressBar progressBar;
 
@@ -58,7 +56,6 @@ public class SignInActivity extends AppCompatActivity {
 
         localStorageHelper = new LocalStorageHelper(this);
 
-        // RestAPI Code
 
         gbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +100,7 @@ public class SignInActivity extends AppCompatActivity {
                 .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
                 .build();
 
-        //startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
     }
 
 
