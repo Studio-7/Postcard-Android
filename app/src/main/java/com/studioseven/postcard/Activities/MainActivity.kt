@@ -42,11 +42,25 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.studioseven.postcard.R.layout.activity_main)
+        setContentView(R.layout.activity_main)
 
         fm.beginTransaction().add(R.id.main_container, fragment3, "3").hide(fragment3).commit()
         fm.beginTransaction().add(R.id.main_container, fragment2, "2").hide(fragment2).commit()
         fm.beginTransaction().add(R.id.main_container,fragment1, "1").commit()
+
+        /*val slidingRootNav = SlidingRootNavBuilder(this)
+            //.withToolbarMenuToggle(toolbar)
+            .withMenuOpened(false)
+            .withContentClickableWhenMenuOpened(false)
+            .withSavedState(savedInstanceState)
+            .withMenuLayout(R.layout.menu_left_drawer)
+            .inject()
+
+        val listner = FloatingSearchView.OnLeftMenuClickListener {
+
+        }
+        floating_search_view.setOnLeftMenuClickListener(listner)*/
+
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }

@@ -31,6 +31,7 @@ public class SignInActivity extends AppCompatActivity {
     ProgressBar progressBar;
 
     String idToken, userId,fname,lname,email,result,token;
+    boolean isGoogle = false;
 
     private static final int RC_SIGN_IN=9001;
 
@@ -118,8 +119,8 @@ public class SignInActivity extends AppCompatActivity {
             if (result.isSuccess())
             {
                 GoogleSignInAccount account=result.getSignInAccount();
+                isGoogle = true;
                 handleSignIn(account);
-
             }
             else {
                 Toast.makeText(this, "Auth Went Wrong", Toast.LENGTH_SHORT).show();
@@ -156,7 +157,7 @@ public class SignInActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         Toast.makeText(this, "Signing Up...", Toast.LENGTH_SHORT).show();
 
-        RestAPI.Companion.getAppService().signUp(user,idToken,fname,lname,email).enqueue(new Callback<Map<String, String>>() {
+        RestAPI.Companion.getAppService().signUp(user,idToken,fname,lname, String.valueOf(isGoogle), email).enqueue(new Callback<Map<String, String>>() {
             @Override
             public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
                 if(response.body().get("error").contains("already"))  signInApiCall(user,idToken);
@@ -174,7 +175,7 @@ public class SignInActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         Toast.makeText(this, "Signing In...", Toast.LENGTH_SHORT).show();
 
-        RestAPI.Companion.getAppService().signIn(user, idToken).enqueue(new Callback<Map<String, String>>() {
+        RestAPI.Companion.getAppService().signIn(user, String.valueOf(isGoogle), idToken).enqueue(new Callback<Map<String, String>>() {
             @Override
             public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
                 handleResponse(response);

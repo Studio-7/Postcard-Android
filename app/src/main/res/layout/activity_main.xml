@@ -8,9 +8,21 @@
         android:layout_height="match_parent"
         tools:context=".Activities.MainActivity">
 
-
     <include layout="@layout/content_main"
-            app:layout_constraintBottom_toTopOf="@id/navigation"/>
+             android:layout_marginTop="50dp"
+             app:layout_constraintBottom_toTopOf="@id/navigation"
+             android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+
+    <com.arlib.floatingsearchview.FloatingSearchView
+            android:id="@+id/floating_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:floatingSearch_searchHint="Search"
+            app:floatingSearch_suggestionsListAnimDuration="250"
+            app:floatingSearch_showSearchKey="true"
+            app:floatingSearch_leftActionMode="showHamburger"
+            app:floatingSearch_close_search_on_keyboard_dismiss="true"/>
 
     <android.support.design.widget.BottomNavigationView
             android:id="@+id/navigation"

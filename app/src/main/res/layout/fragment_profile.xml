@@ -8,19 +8,16 @@
     <!-- TODO: Update blank fragment layout -->
     <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-
             <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/profileBox">
-
 
                 <ImageView
                         android:id="@+id/header_cover_image"
@@ -33,7 +30,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="70dp"
-                        android:layout_marginLeft="10dp">
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp">
+
                     <de.hdodenhof.circleimageview.CircleImageView
                             xmlns:app="http://schemas.android.com/apk/res-auto"
                             android:layout_width="0dp"
@@ -44,77 +43,84 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/abhi"
                             app:civ_border_color="#FFFFFFFF"
-                            app:civ_border_width="3dp"/>
+                            app:civ_border_width="3dp"
+                            tools:targetApi="lollipop"
+                            android:focusable="true"/>
+
                     <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="2"
                             android:padding="5dp"
-                            android:layout_marginTop="20dp"
-                            >
+                            android:layout_marginTop="20dp">
+
                         <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="John Doe"
+                                android:text="Divisha"
                                 android:textColor="@color/colorAccent"
                                 android:textStyle="bold"
                                 android:id="@+id/name"
-                                android:textSize="18dp"
+                                android:textSize="18sp"
+                                android:layout_marginLeft="5dp"
                                 android:textAlignment="gravity"
-                                android:layout_centerVertical="true"
-                                />
+                                android:layout_centerVertical="true"/>
+
                         <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="San Francisco, CA"
                                 android:textStyle="normal"
-                                android:textColor="@color/grey_700"
-                                android:textSize="13dp"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="13sp"
                                 android:layout_toRightOf="@+id/name"
                                 android:layout_centerInParent="true"
-                                android:layout_marginLeft="10dp"/>
+                                android:layout_marginLeft="10dp"
+                                android:layout_toEndOf="@+id/name"
+                                android:layout_marginStart="10dp"/>
                     </RelativeLayout>
+
                     <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:padding="5dp"
-                            android:layout_marginTop="10dp">
+                            android:layout_marginTop="15dp">
 
                         <Button
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Follow"
-                                android:layout_weight="1"
                                 android:layout_centerInParent="true"
                                 android:background="@color/colorAccent"
-                                android:textColor="@color/white"
-                                />
+                                android:textColor="@color/white"/>
+
                     </RelativeLayout>
 
                 </LinearLayout>
+
                 <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="210dp"
-                        android:layout_marginRight="80dp"
-                        >
+                        android:layout_marginRight="80dp">
                     <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_height="100dp"
                             android:layout_weight="1"
-                            android:layout_marginLeft="30dp">
+                            android:layout_marginLeft="30dp"
+                            android:layout_marginStart="30dp">
                         <TextView
                                 android:id="@+id/followingTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="24K"
-                                android:textSize="20dp"
+                                android:textSize="18sp"
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginTop="15dp"
                                 android:textStyle="bold"
                                 android:textColor="@color/black"
-                                />
+                                android:layout_marginStart="10dp"/>
 
                         <TextView
                                 android:layout_width="wrap_content"
@@ -123,7 +129,7 @@
                                 android:layout_centerHorizontal="true"
                                 android:text="FOLLOWERS"
                                 android:textColor="@color/black"
-                                android:textSize="15dp"
+                                android:textSize="12sp"
                                 android:layout_marginBottom="5dp"/>
 
                     </RelativeLayout>
@@ -132,18 +138,20 @@
                             android:layout_width="0dp"
                             android:layout_height="100dp"
                             android:layout_weight="1"
-                            >
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp">
+
                         <TextView
                                 android:id="@+id/NoOfPostsTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="980"
-                                android:textSize="20dp"
+                                android:textSize="18sp"
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginTop="15dp"
                                 android:textStyle="bold"
                                 android:textColor="@color/black"
-                                />
+                                android:layout_marginStart="10dp"/>
 
                         <TextView
                                 android:layout_width="wrap_content"
@@ -152,25 +160,27 @@
                                 android:layout_centerHorizontal="true"
                                 android:text="FOLLOWING"
                                 android:textColor="@color/black"
-                                android:textSize="15dp"
+                                android:textSize="12sp"
                                 android:layout_marginBottom="5dp"/>
 
                     </RelativeLayout>
+
                     <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_height="100dp"
+                            android:layout_marginLeft="10dp"
                             android:layout_weight="1" >
                         <TextView
                                 android:id="@+id/noOfPostsTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="127"
-                                android:textSize="20dp"
+                                android:textSize="18sp"
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginTop="15dp"
                                 android:textStyle="bold"
                                 android:textColor="@color/black"
-                                />
+                                android:layout_marginStart="10dp"/>
 
                         <TextView
                                 android:layout_width="wrap_content"
@@ -179,52 +189,51 @@
                                 android:layout_centerHorizontal="true"
                                 android:text="POSTCARDS"
                                 android:textColor="@color/black"
-                                android:textSize="15dp"
+                                android:textSize="12sp"
                                 android:layout_marginBottom="5dp"/>
 
                     </RelativeLayout>
 
-
-
                 </LinearLayout>
+
                 <LinearLayout
                         android:id="@+id/infoBox"
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_marginTop="300dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        >
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="290dp"
+                        android:layout_marginRight="10dp">
 
                     <TextView
                             android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1.5"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.3"
+                            android:layout_marginTop="15dp"
                             android:text="INFO"
                             android:rotation="-90"
-                            android:textSize="18dp"
+                            android:textSize="16sp"
                             android:textAlignment="center"
-                            android:layout_marginLeft="10dp"
                             android:textStyle="bold"
-                            android:textColor="@color/colorAccent"
-                            />
+                            android:textColor="@color/colorAccent"/>
+
                     <TextView
                             android:layout_width="0dp"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_weight="9"
-                            android:text="Hi! My name is John, I'm a creative geek from San Francisco, CA"
-                            android:textSize="20dp"
-                            android:textColor="@color/grey_800"
-                            />
+                            android:text="Hi! My name is Divisha, I'm a creative geek from San Francisco, CA. I love to travel and read. Dream of travelling to East Asia and embracing the local culture :)"
+                            android:textSize="15sp"
+
+                            android:textColor="@color/grey_800"/>
+
                 </LinearLayout>
+
                 <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
                         android:layout_below="@+id/infoBox"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="30dp"
                         android:layout_marginRight="20dp"
-                        android:layout_marginLeft="20dp"
-                        >
+                        android:layout_marginLeft="20dp">
+
                     <ImageView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
@@ -232,6 +241,7 @@
                             android:src="@drawable/place"
                             android:scaleType="centerCrop"
                             />
+
                     <ImageView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
@@ -241,6 +251,7 @@
                             android:layout_marginLeft="30dp"
                             android:layout_marginRight="30dp"
                             />
+
                     <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
@@ -252,27 +263,24 @@
                                 android:scaleType="centerCrop"
                                 android:alpha="0.6"
                                 />
+
                         <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="+230 PHOTOS"
                                 android:textColor="@color/colorAccent"
                                 android:textStyle="bold"
-                                android:textSize="20dp"
+                                android:textSize="20sp"
                                 android:layout_centerInParent="true"
                                 android:textAlignment="center"/>
-
                     </RelativeLayout>
-
-
 
                 </LinearLayout>
 
-
             </RelativeLayout>
 
-
         </RelativeLayout>
+
     </ScrollView>
 
 </FrameLayout>

@@ -1,6 +1,7 @@
 package com.studioseven.postcard.Utils
 
 import android.content.Context
+import com.studioseven.postcard.Constants
 import com.studioseven.postcard.R
 
 class LocalStorageHelper(var context: Context) {
@@ -20,6 +21,7 @@ class LocalStorageHelper(var context: Context) {
     }
 
     fun updateToken(token: String) {
+        Constants.token = token
         saveToProfile(context.getString(R.string.token_key), token)
     }
 

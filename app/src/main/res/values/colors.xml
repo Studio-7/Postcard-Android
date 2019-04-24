@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--App Colours-->
     <color name="colorPrimary">#9FC188</color>
     <color name="colorPrimaryDark">#473655</color>
     <color name="colorAccent">#57343F</color>
 
+    <color name="colorSecondary">#736995</color>
+    <color name="colorSecondaryDark">#331F38</color>
+
+    <!--Standard Colours-->
     <color name="gray">#ebebeb</color>
     <color name="gray_light">#e8e8e8</color>
     <color name="green_light">#a5d6a7</color>
-
 
     <color name="red_400">#EF5350</color>
     <color name="red_500">#f44336</color>
@@ -42,4 +47,5 @@
     <color name="light_bg_dark_primary_text">#de000000</color>
     <color name="light_bg_dark_secondary_text">#8a000000</color>
     <color name="transparent">#00000000</color>
+
 </resources>

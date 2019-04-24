@@ -38,7 +38,7 @@
                     android:text="divya21raj"
                     android:fontFamily="sans-serif-light"
                     android:layout_marginTop="5dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorAccent"
                     android:textStyle="bold"
                     />
             <TextView

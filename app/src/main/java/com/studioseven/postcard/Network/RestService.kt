@@ -13,11 +13,13 @@ interface RestService {
                @Field("password") password: String,
                @Field("fname") fname: String,
                @Field("lname") lname: String,
+               @Field("googleauth") googleauth: String,
                @Field("email") email: String): Call<Map<String, String>>
 
     @FormUrlEncoded
     @POST("user/login")
     fun signIn(@Field("username") username: String,
+               @Field("googleauth") googleauth: String,
                @Field("password") password: String): Call<Map<String, String>>
 
     @POST("post/createtravelcapsule")
