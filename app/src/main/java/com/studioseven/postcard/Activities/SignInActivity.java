@@ -101,7 +101,7 @@ public class SignInActivity extends AppCompatActivity {
                 .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
                 .build();
 
-        startActivity(new Intent(this, MainActivity.class));
+        //startActivity(new Intent(this, MainActivity.class));
     }
 
 
@@ -160,7 +160,7 @@ public class SignInActivity extends AppCompatActivity {
         RestAPI.Companion.getAppService().signUp(user,idToken,fname,lname, String.valueOf(isGoogle), email).enqueue(new Callback<Map<String, String>>() {
             @Override
             public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
-                if(response.body().get("error").contains("already"))  signInApiCall(user,idToken);
+                if(response.body().get("error") != null)  signInApiCall(user,idToken);
                 else handleResponse(response);
             }
 
@@ -192,16 +192,21 @@ public class SignInActivity extends AppCompatActivity {
         Map<String, String> hm;
         hm = response.body();
         result=hm.get("result");
-        token=hm.get("jwt");
-
-        //update token in local storage
-        localStorageHelper.updateToken(token);
+        token=hm.get("token");
 
         progressBar.setVisibility(View.GONE);
-        Toast.makeText(SignInActivity.this, " Result is "+result+ "  Token is "+token , Toast.LENGTH_SHORT).show();
 
-        Intent i=new Intent(SignInActivity.this, IntroActivity.class);
-        startActivity(i);
+        if(hm.get("error") == null){
+            //update token in local storage
+            localStorageHelper.updateToken(token);
+
+            //Toast.makeText(SignInActivity.this, " Result is "+result+ "  Token is "+token , Toast.LENGTH_SHORT).show();
+
+            Intent i=new Intent(SignInActivity.this, IntroActivity.class);
+            startActivity(i);
+        }else{
+            Toast.makeText(getApplicationContext(), hm.get("error"), Toast.LENGTH_SHORT).show();
+        }
     }
 }
 
