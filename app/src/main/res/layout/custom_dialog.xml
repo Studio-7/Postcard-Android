@@ -3,7 +3,10 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:padding = "10dp">
+              android:padding = "15dp"
+              android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+              android:layout_marginVertical="@dimen/activity_vertical_margin"
+              android:background="@drawable/round_dialog">
 
     <TextView
             android:layout_width="match_parent"
@@ -55,6 +58,31 @@
                 android:layout_weight=".7"
                 android:imeOptions="actionDone"/>
     </LinearLayout>
+<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginVertical="@dimen/activity_vertical_margin">
+    <Button
+            android:text="Ok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/Ok_button"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:background="@drawable/roundbutton"
+            android:layout_marginRight="7dp"/>
+
+    <Button
+            android:text="Cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/cancel_button"
+            android:textColor="@color/white"
+            android:layout_marginRight="7dp"
+            android:background="@drawable/roundbutton"/>
+</LinearLayout>
 
 
 </LinearLayout>
