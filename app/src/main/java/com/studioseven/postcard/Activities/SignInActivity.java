@@ -30,7 +30,7 @@ public class SignInActivity extends AppCompatActivity {
     EditText username,pass;
     ProgressBar progressBar;
 
-    String idToken, userId,fname,lname,email,result,token;
+    String idToken, userId,fname,lname,email,result,token, displayName;
     boolean isGoogle = false;
 
     private static final int RC_SIGN_IN=9001;
@@ -134,6 +134,7 @@ public class SignInActivity extends AppCompatActivity {
         lname=account.getFamilyName();
         fname=account.getGivenName();
         email=account.getEmail();
+        displayName = account.getDisplayName();
         userId=email.split("@")[0];
 
         // Save profile info locally
@@ -142,6 +143,7 @@ public class SignInActivity extends AppCompatActivity {
         localStorageHelper.updateLname(lname);
         localStorageHelper.updateEmail(email);
         localStorageHelper.updateUserId(userId);
+        localStorageHelper.updateUserName(displayName);
 
         // Sign up for the first time, else sign in
         SharedPreferences sharedPreferences = getSharedPreferences("Auth", Context.MODE_PRIVATE);

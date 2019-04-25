@@ -62,4 +62,9 @@ class LocalStorageHelper(var context: Context?) {
     fun getUserId() {
         getFromProfile(context!!.getString(R.string.userid_key), "")
     }
+
+    fun updateUserName(displayName: String) {
+        Constants.userName = displayName
+        saveToProfile(context!!.getString(R.string.username_key), displayName)
+    }
 }

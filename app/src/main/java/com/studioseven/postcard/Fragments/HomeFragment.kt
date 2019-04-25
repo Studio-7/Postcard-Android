@@ -1,10 +1,16 @@
 package com.studioseven.postcard.Fragments
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ClipData
+import android.content.Context.LOCATION_SERVICE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -14,6 +20,7 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.ContextCompat.getSystemService
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -66,6 +73,7 @@ class HomeFragment : Fragment() {
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
     private var capsuleTitle: String? = null
+    private var capsuleMessage: String? = null
     private var capsuleId: String? = null
     private var token: String? = null
     private var errorMsg:String? = null
@@ -75,9 +83,23 @@ class HomeFragment : Fragment() {
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
 
+    private var locationManager : LocationManager? = null
+
     lateinit var localStorageHelper: LocalStorageHelper
 
+    private val locationListener: LocationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            Log.d("TAG", location.longitude.toString()  + " " + location.latitude.toString())
+            Constants.location = location.latitude.toString() + "," + location.longitude.toString()
+        }
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+        override fun onProviderEnabled(provider: String) {}
+        override fun onProviderDisabled(provider: String) {}
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        val permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+        ActivityCompat.requestPermissions(context as Activity, permissions,0)
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
@@ -85,11 +107,14 @@ class HomeFragment : Fragment() {
         }
     }
 
+    @SuppressLint("MissingPermission")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         isStoragePermissionGranted()
+
+        locationManager = context!!.getSystemService(LOCATION_SERVICE) as LocationManager?
 
         localStorageHelper = LocalStorageHelper(context)
 
@@ -123,18 +148,19 @@ class HomeFragment : Fragment() {
             adapter = viewAdapter
         }
 
-        fetchFeed()
+        //fetchFeed()
 
         //Bottom sheet
         val fab : FloatingActionButton = view?.findViewById(R.id.floating)!!
         fab.setOnClickListener {
+            locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
             showAlertDialogue()
         }
 
         return view
     }
 
-    fun fetchFeed(){
+    /*fun fetchFeed(){
         RestAPI.getAppService().search(Constants.userId,Constants.token, "1 2 3").
             enqueue(object: Callback<Map<String, Any>>{
                 override fun onResponse(call: Call<Map<String, Any>>, response: Response<Map<String, Any>>) {
@@ -149,7 +175,7 @@ class HomeFragment : Fragment() {
                 }
             })
 
-    }
+    }*/
 
     private fun populateUI(result: Map<String, Any>?) {
         Toast.makeText(context, "Hurray", Toast.LENGTH_SHORT).show()
@@ -160,24 +186,22 @@ class HomeFragment : Fragment() {
 
     private fun showAlertDialogue() {
         val builder = AlertDialog.Builder(context!!)
-        builder.setTitle("Capsule Title: " )
-        builder.setMessage("Enter the title for your travel capsule")
-        val input = EditText(context)
-        val lp: LinearLayout.LayoutParams  = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.MATCH_PARENT)
-        input.setLayoutParams(lp)
-        builder.setView(input)
+        var dialogInflater: LayoutInflater = LayoutInflater.from(context)
+        var dialogView: View = dialogInflater.inflate(R.layout.custom_dialog, null);
+        builder.setView(dialogView)
         builder.setCancelable(false)
         builder.setPositiveButton(android.R.string.ok) { dialog, p1 ->
-            val newCategory = input.text
+            var titleEditText: EditText = dialogView.findViewById(R.id.et_title)
+            var messageEditText: EditText = dialogView.findViewById(R.id.et_message)
+            val newCategory = titleEditText.text
             var isValid = true
-            if (newCategory.isBlank()) {
+            if (newCategory.isBlank() || messageEditText.text.isBlank()) {
                 Toast.makeText(context, "Title cannot be left blank", Toast.LENGTH_LONG).show()
                 isValid = false
             }
             if (isValid) {
                 capsuleTitle = newCategory.toString()
+                capsuleMessage = messageEditText.text.toString()
                 val bottomSheet = BottomSheet()
                 bottomSheet.setParentFragment(this)
                 bottomSheet.show(fragmentManager, "bottomsheet")
@@ -214,7 +238,8 @@ class HomeFragment : Fragment() {
     }
 
     fun createCapsule(selectedMediaUri :ClipData){
-        RestAPI.getAppService().createCapsule("am9obndpY2s=.RmxIb3FZU0h1Y2Jpa1F4Sk9rd3piY0x5c29VSHp5UVo=.Y2hBZzdOYVY4UVRQL0psYjY5ZVV1WEpGbmRBMTFNSUdnQUdLUWV0Q3lQZz0=", "johnwick", capsuleTitle!!)
+        Log.d("TAG", Constants.token)
+        RestAPI.getAppService().createCapsule(Constants.token, Constants.userId, capsuleTitle!!)
             .enqueue(object : Callback<Map<String, String>> {
                 override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
                     Log.d("TAG", "Failed")
@@ -223,6 +248,8 @@ class HomeFragment : Fragment() {
                 override fun onResponse(call: Call<Map<String, String>>, response: Response<Map<String, String>>) {
                     capsuleId = response.body()!!["travelcapsule"]
                     token = response.body()!!["token"]
+                    Log.d("TAG", response.body()!!["result"])
+                    localStorageHelper.updateToken(token!!)
                     //Log.d("TAG", token)
                     for (i in 0..(selectedMediaUri.itemCount - 1)) {
                         Log.d("TAG", selectedMediaUri.getItemAt(i).uri.toString())
@@ -248,10 +275,10 @@ class HomeFragment : Fragment() {
                          file
              )
             val body: MultipartBody.Part = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-            val tokenRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, token)
-            val usernameRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, "johnwick")
+            val tokenRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, Constants.token)
+            val usernameRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, Constants.userId)
             val titleRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleTitle)
-            val messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, "First Capsule")
+            val messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleMessage)
             val idRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleId)
 
             RestAPI.getAppService()
@@ -284,10 +311,10 @@ class HomeFragment : Fragment() {
                 file
             )
             val body: MultipartBody.Part = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-            val tokenRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, token)
-            val usernameRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, "johnwick")
+            val tokenRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, Constants.token)
+            val usernameRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, Constants.userId)
             val titleRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleTitle)
-            val messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, "First Capsule")
+            val messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleMessage)
             val idRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleId)
 
             RestAPI.getAppService()
