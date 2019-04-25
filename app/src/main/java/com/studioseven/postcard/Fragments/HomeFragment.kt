@@ -90,7 +90,7 @@ class HomeFragment : Fragment() {
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             Log.d("TAG", location.longitude.toString()  + " " + location.latitude.toString())
-            Constants.location = location.latitude.toString() + "," + location.longitude.toString()
+            Constants.location = location.longitude.toString() + "," + location.latitude.toString()
         }
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
         override fun onProviderEnabled(provider: String) {}
@@ -280,9 +280,10 @@ class HomeFragment : Fragment() {
             val titleRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleTitle)
             val messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleMessage)
             val idRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleId)
+            val locationRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, Constants.location)
 
             RestAPI.getAppService()
-                .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody)
+                .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody, locationRequestBody)
                 .enqueue(object : Callback<Map<String, String>> {
                     override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
                         Log.d("TAG", t.message)
@@ -316,9 +317,10 @@ class HomeFragment : Fragment() {
             val titleRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleTitle)
             val messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleMessage)
             val idRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleId)
+            val locationRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, Constants.location)
 
             RestAPI.getAppService()
-                .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody)
+                .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody, locationRequestBody)
                 .enqueue(object : Callback<Map<String, String>> {
                     override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
                         Log.d("TAG", t.message)
