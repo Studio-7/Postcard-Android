@@ -12,5 +12,6 @@ public class Constants {
     public static String userId = "";
     public static String email = "";
     public static String userName = "";
+    public static String location = "";
 
 }

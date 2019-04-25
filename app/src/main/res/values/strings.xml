@@ -20,5 +20,6 @@
     <string name="email_key">email</string>
     <string name="userid_key">userId</string>
     <string name="dummy_token">dGhvcg==.RWJqZ3BSZ2JlbHdmalJMd0RsQ3V5blF2aU9ETG1ZRkE=.MWlsSXVoNEtsei9LWWJWSlg0bmdKTkRveUF2RTBnbkY3N1ZkUDNTWG1UQT0=</string>
+    <string name="username_key">username</string>
 
 </resources>
