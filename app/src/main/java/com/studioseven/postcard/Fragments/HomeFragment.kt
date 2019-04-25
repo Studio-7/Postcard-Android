@@ -25,10 +25,12 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import com.studioseven.postcard.Adapters.PostcardAdapter
+import com.studioseven.postcard.Constants
 import com.studioseven.postcard.Models.Image
 import com.studioseven.postcard.Models.Postcard
 import com.studioseven.postcard.Network.RestAPI
 import com.studioseven.postcard.R
+import com.studioseven.postcard.Utils.LocalStorageHelper
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -73,6 +75,8 @@ class HomeFragment : Fragment() {
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
 
+    lateinit var localStorageHelper: LocalStorageHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -87,7 +91,8 @@ class HomeFragment : Fragment() {
     ): View? {
         isStoragePermissionGranted()
 
-        // Inflate the layout for this fragment
+        localStorageHelper = LocalStorageHelper(context)
+
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         viewManager = LinearLayoutManager(view.context)
@@ -111,56 +116,82 @@ class HomeFragment : Fragment() {
             , view.context)
 
         recyclerView = view.postcardRv.apply {
-            // use this setting to improve performance if you know that changes
-            // in content do not change the layout size of the RecyclerView
             setHasFixedSize(true)
 
-            // use a linear layout manager
             layoutManager = viewManager
 
-            // specify an viewAdapter (see also next example)
             adapter = viewAdapter
         }
+
+        fetchFeed()
 
         //Bottom sheet
         val fab : FloatingActionButton = view?.findViewById(R.id.floating)!!
         fab.setOnClickListener {
-            val builder = AlertDialog.Builder(context!!)
-            builder.setTitle("Capsule Title: " )
-            builder.setMessage("Enter the title for your travel capsule")
-            val input: EditText = EditText(context)
-            val lp: LinearLayout.LayoutParams  = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT)
-            input.setLayoutParams(lp)
-            builder.setView(input)
-            builder.setCancelable(false)
-            builder.setPositiveButton(android.R.string.ok) { dialog, p1 ->
-                val newCategory = input.text
-                var isValid = true
-                if (newCategory.isBlank()) {
-                    Toast.makeText(context, "Title cannot be left blank", Toast.LENGTH_LONG).show()
-                    isValid = false
-                }
-                if (isValid) {
-                    capsuleTitle = newCategory.toString()
-                    val bottomSheet = BottomSheet()
-                    bottomSheet.setParentFragment(this)
-                    bottomSheet.show(fragmentManager, "bottomsheet")
-                }
-                if (isValid) {
-                    dialog.dismiss()
-                }
-            }
-
-            builder.setNegativeButton(android.R.string.cancel) { dialog, p1 ->
-                dialog.cancel()
-            }
-
-            builder.show()
+            showAlertDialogue()
         }
 
         return view
+    }
+
+    fun fetchFeed(){
+        RestAPI.getAppService().search(Constants.userId,Constants.token, "1 2 3").
+            enqueue(object: Callback<Map<String, Any>>{
+                override fun onResponse(call: Call<Map<String, Any>>, response: Response<Map<String, Any>>) {
+                    if(response.body()?.get("error") == null){
+                        localStorageHelper.updateToken(response.body()?.get("token"))
+                        populateUI(response.body()?.get("result"))
+                    }
+                }
+
+                override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+            })
+
+    }
+
+    private fun populateUI(result: Map<String, Any>?) {
+        Toast.makeText(context, "Hurray", Toast.LENGTH_SHORT).show()
+        for (postcard in result?.values!!){
+
+        }
+    }
+
+    private fun showAlertDialogue() {
+        val builder = AlertDialog.Builder(context!!)
+        builder.setTitle("Capsule Title: " )
+        builder.setMessage("Enter the title for your travel capsule")
+        val input = EditText(context)
+        val lp: LinearLayout.LayoutParams  = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT)
+        input.setLayoutParams(lp)
+        builder.setView(input)
+        builder.setCancelable(false)
+        builder.setPositiveButton(android.R.string.ok) { dialog, p1 ->
+            val newCategory = input.text
+            var isValid = true
+            if (newCategory.isBlank()) {
+                Toast.makeText(context, "Title cannot be left blank", Toast.LENGTH_LONG).show()
+                isValid = false
+            }
+            if (isValid) {
+                capsuleTitle = newCategory.toString()
+                val bottomSheet = BottomSheet()
+                bottomSheet.setParentFragment(this)
+                bottomSheet.show(fragmentManager, "bottomsheet")
+            }
+            if (isValid) {
+                dialog.dismiss()
+            }
+        }
+
+        builder.setNegativeButton(android.R.string.cancel) { dialog, p1 ->
+            dialog.cancel()
+        }
+
+        builder.show()
     }
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)

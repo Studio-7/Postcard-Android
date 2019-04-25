@@ -36,5 +36,16 @@ interface RestService {
                   @Part("message") message: RequestBody,
                   @Part file: MultipartBody.Part,
                   @Part("travelcapsule") id: RequestBody): Call<Map<String, String>>
+
+    @FormUrlEncoded
+    @POST("/search/find")
+    fun search(@Field("username") username: String,
+               @Field("token") token: String,
+               @Field("query") query: String): Call<Map<String, Any>>
+
+    @FormUrlEncoded
+    @POST("/feed/main")
+    fun getFeed(@Field("username") username: String,
+               @Field("token") token: String): Call<Map<String, Any>>
 }
 

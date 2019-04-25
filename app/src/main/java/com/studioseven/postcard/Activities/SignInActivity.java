@@ -153,7 +153,7 @@ public class SignInActivity extends AppCompatActivity {
 
     }
 
-    private void signUpApiCal(final String user, final String idToken, String fname, String lname, String email) {
+    private void signUpApiCal(final String user, final String idToken, String fname, String lname, final String email) {
         progressBar.setVisibility(View.VISIBLE);
         Toast.makeText(this, "Signing Up...", Toast.LENGTH_SHORT).show();
 
@@ -202,7 +202,7 @@ public class SignInActivity extends AppCompatActivity {
 
             //Toast.makeText(SignInActivity.this, " Result is "+result+ "  Token is "+token , Toast.LENGTH_SHORT).show();
 
-            Intent i=new Intent(SignInActivity.this, IntroActivity.class);
+            Intent i=new Intent(SignInActivity.this, MainActivity.class);
             startActivity(i);
         }else{
             Toast.makeText(getApplicationContext(), hm.get("error"), Toast.LENGTH_SHORT).show();

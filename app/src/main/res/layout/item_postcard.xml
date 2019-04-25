@@ -84,56 +84,60 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                >
+                android:padding="7dp"
+                android:alpha="0.8"
+                android:background="@color/colorPrimaryDark">
 
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="124 likes"
-                    android:textStyle="bold"
                     android:textColor="@color/white"
                     android:shadowColor="@color/black"
                     android:shadowDx="1"
                     android:shadowDy="1"
+                    android:layout_marginStart="15dp"
+                    android:layout_centerVertical="true"
                     android:shadowRadius="1"
                     android:textSize="20sp"
-                    android:id="@+id/postLikeTv"/>
+                    android:id="@+id/postLikeTv"
+                    android:layout_marginLeft="15dp"/>
 
             <RelativeLayout
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/iconLayout"
                     android:background="@color/transparent"
+                    android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="15dp">
+                    android:layout_marginRight="15dp">
 
                 <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:id="@+id/image_heart_red"
-                        android:layout_marginLeft="19dp"
-                        app:srcCompat="@drawable/vector_heart_red"
+                        android:layout_marginLeft="20dp"
+                        app:srcCompat="@drawable/ic_heart_red"
                         android:background="@color/transparent"
                         android:visibility="invisible"/>
 
                 <ImageView
                         android:layout_width="30dp"
-                        android:layout_height="32dp"
+                        android:layout_height="30dp"
                         android:id="@+id/image_heart_white"
                         android:layout_marginLeft="20dp"
-                        app:srcCompat="@drawable/ic_like"
+                        app:srcCompat="@drawable/ic_heart_white"
                         android:visibility="visible"
-                        android:layout_marginTop="2dp"
                         android:layout_alignParentTop="true"/>
 
                 <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:id="@+id/speech_bubble"
                         android:layout_toRightOf="@+id/image_heart_red"
                         android:layout_marginLeft="30dp"
+                        android:layout_marginTop="2dp"
                         app:srcCompat="@drawable/ic_comment"
                         android:visibility="visible"
                         />
