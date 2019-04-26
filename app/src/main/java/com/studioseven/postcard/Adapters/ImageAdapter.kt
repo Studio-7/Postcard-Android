@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
-import com.studioseven.postcard.Models.Image
+import com.studioseven.postcard.Models.Post
 import com.studioseven.postcard.R
 import kotlinx.android.synthetic.main.item_image.view.*
 
-class ImageAdapter(private val items: List<Image>) :
+class ImageAdapter(private val items: List<Post>) :
     RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
 
     // Provide a reference to the views for each data item

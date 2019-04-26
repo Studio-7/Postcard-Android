@@ -35,6 +35,7 @@ class PostcardAdapter(private val postcardList: List<Postcard>, private val cont
         val imageScroll = view.imageScroll
         val image_heart_white = view.image_heart_white
         val image_heart_red = view.image_heart_red
+        val postDescription = view.postDescriptionTv
     }
 
     lateinit var myViewHolder: MyViewHolder
@@ -108,6 +109,12 @@ class PostcardAdapter(private val postcardList: List<Postcard>, private val cont
 
             Picasso.get().load(url)
                 .into(myViewHolder.postImage)
+
+            val message = postcardList[myViewHolder.adapterPosition].mediaLinkList[myViewHolder.imageScroll.currentItem].message
+            if(message != ""){
+                myViewHolder.postDescription.visibility = View.VISIBLE
+                myViewHolder.postDescription.text = message
+            }else myViewHolder.postDescription.visibility = View.GONE
         }
     }
 

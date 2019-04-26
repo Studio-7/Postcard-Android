@@ -7,6 +7,6 @@ class Postcard(
     var hashTagList: List<String>,
     var timeAgo: String,
     var isLiked: Boolean,
-    var mediaLinkList: List<Image>,
+    var mediaLinkList: List<Post>,
     var userImageLink: String
 )

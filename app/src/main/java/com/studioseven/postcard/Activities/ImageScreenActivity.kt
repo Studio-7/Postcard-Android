@@ -13,6 +13,6 @@ class ImageScreenActivity : AppCompatActivity() {
         setContentView(com.studioseven.postcard.R.layout.activity_image_screen)
         val intent = intent
         val value = intent.getStringExtra("imageUrl")
-        Picasso.get().load(value).into(image)
+        if(value != "") Picasso.get().load(value).into(image)
     }
 }

@@ -31,7 +31,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.studioseven.postcard.Adapters.PostcardAdapter
 import com.studioseven.postcard.Constants
-import com.studioseven.postcard.Models.Image
+import com.studioseven.postcard.Models.Post
 import com.studioseven.postcard.Models.Postcard
 import com.studioseven.postcard.Network.RestAPI
 import com.studioseven.postcard.R
@@ -123,13 +123,13 @@ class HomeFragment : Fragment() {
 
         view.postcardShimmer.visibility = View.VISIBLE
 
-        /*val images: List<Image> = listOf(
-            Image("https://i.pinimg.com/originals/be/86/1b/be861bdfb1a6f38395c426123efa6ee6.jpg"),
-            Image("https://images-na.ssl-images-amazon.com/images/I/71Lo6ZgNLrL._SL1200_.jpg"),
-            Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrAzB3dynTfZ4CioA56_XksdHsXMZUZgv4HfSb5O9js5BBjEix"),
-            Image("https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM"),
-            Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS19FFqjUfKyZnx6K7g_YmnWQqHZ86ZodzbhDgwtQFH2rohNTvE"),
-            Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFaEOzIwdDMy5O5m7t5qMnQVIbU5WVpfxaD40PoI528PIPOLQQcg")
+        /*val images: List<Post> = listOf(
+            Post("https://i.pinimg.com/originals/be/86/1b/be861bdfb1a6f38395c426123efa6ee6.jpg"),
+            Post("https://images-na.ssl-images-amazon.com/images/I/71Lo6ZgNLrL._SL1200_.jpg"),
+            Post("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrAzB3dynTfZ4CioA56_XksdHsXMZUZgv4HfSb5O9js5BBjEix"),
+            Post("https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM"),
+            Post("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS19FFqjUfKyZnx6K7g_YmnWQqHZ86ZodzbhDgwtQFH2rohNTvE"),
+            Post("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFaEOzIwdDMy5O5m7t5qMnQVIbU5WVpfxaD40PoI528PIPOLQQcg")
         )
 
         postCardList = listOf(Postcard("abhishek", "Kanchi", "123",
@@ -220,15 +220,18 @@ class HomeFragment : Fragment() {
     }
 
     private fun fillPostcardList(postcard: Map<String, Any>, postList: Collection<Map<*, *>>) {
-        var images: List<Image> = listOf()
+        var posts: List<Post> = listOf()
 
         for(postMap in postList){
-            images = images + Image((((postMap["post"] as Map<*, *>)["PostBody"] as Map<*, *>)["Img"] as Map<*, *>)["Link"] as String)
+            posts = posts + Post((((postMap["post"] as Map<*, *>)["PostBody"] as Map<*, *>)["Img"] as Map<*, *>)["Link"] as String,
+                                    (((postMap["post"] as Map<*, *>)["PostBody"] as Map<*, *>)["Message"] as String))
         }
 
         val pc = Postcard(postcard["CreatedBy"] as String, postcard["Title"] as String, (postcard["Likes"] as Double).toString(),
             listOf("Hariharan", "Arko"),"2 days ago",
-            false, images, "https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM")
+            false, posts, "https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM")
+
+        if((postcard["CreatedBy"] as String).contains("ear")) pc.userImageLink = "https://www.infosys.com/confluence/PublishingImages/18/bear-gryls.jpg"
 
         postCardList = postCardList + pc
     }
@@ -409,7 +412,7 @@ class HomeFragment : Fragment() {
                     override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
                         Log.d("TAG", t.message)
                         homeProgressBar.visibility = View.GONE
-                        Toast.makeText(context, "Failed Image Upload ${t.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Failed Post Upload ${t.message}", Toast.LENGTH_SHORT).show()
                     }
                     override fun onResponse(
                         call: Call<Map<String, String>>,
