@@ -26,6 +26,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.studioseven.postcard.Adapters.PostcardAdapter
@@ -264,39 +265,70 @@ class HomeFragment : Fragment() {
     private fun showAlertDialogue() {
         val builder = AlertDialog.Builder(context!!)
         var dialogInflater: LayoutInflater = LayoutInflater.from(context)
-        var dialogView: View = dialogInflater.inflate(R.layout.custom_dialog, null);
+        var dialogView: View = dialogInflater.inflate(R.layout.upload_dialog, null);
         builder.setView(dialogView)
-        builder.setCancelable(false)
-        builder.setPositiveButton(android.R.string.ok) { dialog, p1 ->
-            var titleEditText: EditText = dialogView.findViewById(R.id.et_title)
-            var messageEditText: EditText = dialogView.findViewById(R.id.et_message)
-            val newCategory = titleEditText.text
-            var isValid = true
-            if (newCategory.isBlank() || messageEditText.text.isBlank()) {
-                Toast.makeText(context, "Title cannot be left blank", Toast.LENGTH_LONG).show()
-                isValid = false
+        builder.setCancelable(true)
+        var new_capsule: Button=dialogView.findViewById(R.id.new_capsule)
+        var existing_capsule: Button=dialogView.findViewById(R.id.existing_capsule)
+        var dialog1=builder.show()
+
+
+            new_capsule.setOnClickListener{
+                val builder1 = AlertDialog.Builder(context!!)
+                var dialogInflater1: LayoutInflater = LayoutInflater.from(context)
+                var dialogView1: View = dialogInflater1.inflate(R.layout.custom_dialog, null);
+                builder1.setView(dialogView1)
+                builder1.setCancelable(true)
+
+                var ok_button: Button=dialogView1.findViewById(R.id.Ok_button)
+                var cancel_button: Button=dialogView1.findViewById(R.id.cancel_button)
+
+                var dialog2=builder1.show()
+
+                ok_button.setOnClickListener {
+                    var titleEditText: EditText = dialogView1.findViewById(R.id.et_title)
+                    var messageEditText: EditText = dialogView1.findViewById(R.id.et_message)
+
+                    val newCategory = titleEditText.text
+                    var isValid = true
+                    if (newCategory.isBlank() || messageEditText.text.isBlank()) {
+                        Toast.makeText(context, "Title cannot be left blank", Toast.LENGTH_LONG).show()
+                        isValid = false
+                    }
+                    if (isValid) {
+                        capsuleTitle = newCategory.toString()
+                        capsuleMessage = messageEditText.text.toString()
+                        //save capsule title and message to shared preference
+                        localStorageHelper.saveToProfile(context!!.getString(R.string.prevCapsuleTitle), capsuleTitle)
+                        localStorageHelper.saveToProfile(context!!.getString(R.string.prevCapsuleMessage), capsuleMessage)
+                        val bottomSheet = BottomSheet()
+                        bottomSheet.setParentFragment(this)
+                        bottomSheet.show(fragmentManager, "bottomsheet")
+                        dialog1.dismiss()
+
+                    }
+                    if (isValid) {
+                        dialog2.dismiss()
+                    }
+                }
+
+               cancel_button.setOnClickListener {
+                    dialog2.cancel()
+                }
+                //builder1.show()
+
             }
-            if (isValid) {
-                capsuleTitle = newCategory.toString()
-                capsuleMessage = messageEditText.text.toString()
-                //save capsule title and message to shared preference
-                localStorageHelper.saveToProfile(context!!.getString(R.string.prevCapsuleTitle), capsuleTitle)
-                localStorageHelper.saveToProfile(context!!.getString(R.string.prevCapsuleMessage), capsuleMessage)
-                val bottomSheet = BottomSheet()
-                bottomSheet.setParentFragment(this)
-                bottomSheet.show(fragmentManager, "bottomsheet")
-            }
-            if (isValid) {
-                dialog.dismiss()
-            }
+
+        existing_capsule.setOnClickListener {
+            val bottomSheet = BottomSheet()
+            bottomSheet.setParentFragment(this)
+            bottomSheet.show(fragmentManager, "bottomsheet")
+            dialog1.dismiss()
         }
 
-        builder.setNegativeButton(android.R.string.cancel) { dialog, p1 ->
-            dialog.cancel()
-        }
-
-        builder.show()
     }
+
+
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
