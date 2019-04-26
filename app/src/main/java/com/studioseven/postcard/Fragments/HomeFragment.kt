@@ -81,7 +81,7 @@ class HomeFragment : Fragment() {
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
 
-    var postCardList: List<Postcard> = listOf()
+    private var postCardList: List<Postcard> = listOf()
 
     private var locationManager : LocationManager? = null
 
@@ -144,7 +144,7 @@ class HomeFragment : Fragment() {
         capsuleId = localStorageHelper.getFromProfile(context!!.getString(R.string.prevCapsuleId), null)
         capsuleTitle = localStorageHelper.getFromProfile(context!!.getString(R.string.prevCapsuleTitle), null)
         capsuleMessage = localStorageHelper.getFromProfile(context!!.getString(R.string.prevCapsuleMessage), null)
-        Log.d("TAG", capsuleId + " " + capsuleTitle + " " + capsuleMessage)
+        Log.d("TAG", "$capsuleId $capsuleTitle $capsuleMessage")
 
         //Bottom sheet
         val fab : FloatingActionButton = view?.findViewById(R.id.floating)!!
@@ -164,7 +164,7 @@ class HomeFragment : Fragment() {
         return view
     }
 
-    fun fetchFeed(view: View) {
+    private fun fetchFeed(view: View) {
         RestAPI.getAppService().search(Constants.userId,Constants.token, "1 2 3").
             enqueue(object: Callback<Map<String, Any>>{
                 override fun onResponse(call: Call<Map<String, Any>>, response: Response<Map<String, Any>>) {
@@ -264,30 +264,30 @@ class HomeFragment : Fragment() {
 
     private fun showAlertDialogue() {
         val builder = AlertDialog.Builder(context!!)
-        var dialogInflater: LayoutInflater = LayoutInflater.from(context)
-        var dialogView: View = dialogInflater.inflate(R.layout.upload_dialog, null);
+        val dialogInflater: LayoutInflater = LayoutInflater.from(context)
+        val dialogView: View = dialogInflater.inflate(R.layout.upload_dialog, null);
         builder.setView(dialogView)
         builder.setCancelable(true)
-        var new_capsule: Button=dialogView.findViewById(R.id.new_capsule)
-        var existing_capsule: Button=dialogView.findViewById(R.id.existing_capsule)
-        var dialog1=builder.show()
+        val new_capsule: Button=dialogView.findViewById(R.id.new_capsule)
+        val existing_capsule: Button=dialogView.findViewById(R.id.existing_capsule)
+        val dialog1=builder.show()
 
 
             new_capsule.setOnClickListener{
                 val builder1 = AlertDialog.Builder(context!!)
-                var dialogInflater1: LayoutInflater = LayoutInflater.from(context)
-                var dialogView1: View = dialogInflater1.inflate(R.layout.custom_dialog, null);
+                val dialogInflater1: LayoutInflater = LayoutInflater.from(context)
+                val dialogView1: View = dialogInflater1.inflate(R.layout.custom_dialog, null);
                 builder1.setView(dialogView1)
                 builder1.setCancelable(true)
 
-                var ok_button: Button=dialogView1.findViewById(R.id.Ok_button)
-                var cancel_button: Button=dialogView1.findViewById(R.id.cancel_button)
+                val ok_button: Button=dialogView1.findViewById(R.id.Ok_button)
+                val cancel_button: Button=dialogView1.findViewById(R.id.cancel_button)
 
-                var dialog2=builder1.show()
+                val dialog2=builder1.show()
 
                 ok_button.setOnClickListener {
-                    var titleEditText: EditText = dialogView1.findViewById(R.id.et_title)
-                    var messageEditText: EditText = dialogView1.findViewById(R.id.et_message)
+                    val titleEditText: EditText = dialogView1.findViewById(R.id.et_title)
+                    val messageEditText: EditText = dialogView1.findViewById(R.id.et_message)
 
                     val newCategory = titleEditText.text
                     var isValid = true
@@ -349,7 +349,7 @@ class HomeFragment : Fragment() {
         })
     }
 
-    fun createCapsule(selectedMediaUri :ClipData){
+    private fun createCapsule(selectedMediaUri :ClipData){
         Log.d("TAG", Constants.token)
         RestAPI.getAppService().createCapsule(Constants.token, Constants.userId, capsuleTitle!!)
             .enqueue(object : Callback<Map<String, String>> {
@@ -364,7 +364,7 @@ class HomeFragment : Fragment() {
                     Log.d("TAG", capsuleId)
                     localStorageHelper.updateToken(token!!)
                     //Log.d("TAG", token)
-                    for (i in 0..(selectedMediaUri.itemCount - 1)) {
+                    for (i in 0 until selectedMediaUri.itemCount) {
                         Log.d("TAG", selectedMediaUri.getItemAt(i).uri.toString())
                         if (!selectedMediaUri.getItemAt(i).uri.toString().contains(".mp4")) {
                             //val bitmap = MediaStore.Images.Media.getBitmap(context!!.contentResolver, selectedMediaUri.getItemAt(i).uri)
@@ -388,12 +388,12 @@ class HomeFragment : Fragment() {
                          file
              )
             val body: MultipartBody.Part = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-            val tokenRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, Constants.token)
-            val usernameRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, Constants.userId)
-            val titleRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleTitle)
-            val messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleMessage)
-            val idRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleId)
-            val locationRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, Constants.location)
+            val tokenRequestBody = RequestBody.create(MultipartBody.FORM, Constants.token)
+            val usernameRequestBody = RequestBody.create(MultipartBody.FORM, Constants.userId)
+            val titleRequestBody = RequestBody.create(MultipartBody.FORM, capsuleTitle)
+            val messageRequestBody = RequestBody.create(MultipartBody.FORM, capsuleMessage)
+            val idRequestBody = RequestBody.create(MultipartBody.FORM, capsuleId)
+            val locationRequestBody = RequestBody.create(MultipartBody.FORM, Constants.location)
 
             RestAPI.getAppService()
                 .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody, locationRequestBody)
@@ -407,6 +407,7 @@ class HomeFragment : Fragment() {
                     ) {
                         capsuleId = response.body()!!["travelcapsule"]
                         token = response.body()!!["token"]
+                        localStorageHelper.updateToken(token)
                     }
 
                 })
@@ -424,12 +425,12 @@ class HomeFragment : Fragment() {
                 file
             )
             val body: MultipartBody.Part = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-            val tokenRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, Constants.token)
-            val usernameRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, Constants.userId)
-            val titleRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleTitle)
-            val messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleMessage)
-            val idRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleId)
-            val locationRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, Constants.location)
+            val tokenRequestBody = RequestBody.create(MultipartBody.FORM, Constants.token)
+            val usernameRequestBody = RequestBody.create(MultipartBody.FORM, Constants.userId)
+            val titleRequestBody = RequestBody.create(MultipartBody.FORM, capsuleTitle)
+            val messageRequestBody = RequestBody.create(MultipartBody.FORM, capsuleMessage)
+            val idRequestBody = RequestBody.create(MultipartBody.FORM, capsuleId)
+            val locationRequestBody = RequestBody.create(MultipartBody.FORM, Constants.location)
 
             RestAPI.getAppService()
                 .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody, locationRequestBody)
@@ -443,6 +444,7 @@ class HomeFragment : Fragment() {
                     ) {
                         capsuleId = response.body()!!["travelcapsule"]
                         token = response.body()!!["token"]
+                        localStorageHelper.updateToken(token)
                     }
 
                 })
@@ -452,7 +454,8 @@ class HomeFragment : Fragment() {
     }
 
 
-    fun saveImage(finalBitmap: Bitmap): Uri {
+    @SuppressLint("SimpleDateFormat")
+    private fun saveImage(finalBitmap: Bitmap): Uri {
 
         val root: String = Environment.getExternalStorageDirectory().toString()
         val myDir: File = File(root + "/Postcard")
@@ -475,7 +478,7 @@ class HomeFragment : Fragment() {
     }
 
     /* Checks if external storage is available for read and write */
-    fun isExternalStorageWritable(): Boolean {
+    private fun isExternalStorageWritable(): Boolean {
         val state: String = Environment.getExternalStorageState()
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             return true
@@ -483,7 +486,7 @@ class HomeFragment : Fragment() {
         return false
     }
 
-    fun isStoragePermissionGranted(): Boolean {
+    private fun isStoragePermissionGranted(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(context!!, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 Log.v("TAG", "Permission is granted")
@@ -520,31 +523,13 @@ class HomeFragment : Fragment() {
         listener = null
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
+
     interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =

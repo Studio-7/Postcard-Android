@@ -29,8 +29,8 @@ import retrofit2.Response;
 import java.util.Map;
 
 public class SignInActivity extends AppCompatActivity {
-    Button obtn;
-    ImageView gbtn;
+    Button oBtn;
+    ImageView gBtn;
     EditText username,pass;
     ShimmerFrameLayout logoShimmer;
 
@@ -48,8 +48,8 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        gbtn=findViewById(R.id.googleLogin);
-        obtn=findViewById(R.id.Login);
+        gBtn =findViewById(R.id.googleLogin);
+        oBtn =findViewById(R.id.Login);
         username=findViewById(R.id.Username);
         pass=findViewById(R.id.password);
         logoShimmer=findViewById(R.id.logoShimmerSignIn);
@@ -62,7 +62,7 @@ public class SignInActivity extends AppCompatActivity {
         localStorageHelper = new LocalStorageHelper(this);
 
 
-        gbtn.setOnClickListener(new View.OnClickListener() {
+        gBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signIn();
@@ -83,7 +83,7 @@ public class SignInActivity extends AppCompatActivity {
             }
         };*/
 
-        obtn.setOnClickListener(new View.OnClickListener() {
+        oBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 userId =username.getText().toString();
@@ -165,13 +165,13 @@ public class SignInActivity extends AppCompatActivity {
 
         RestAPI.Companion.getAppService().signUp(user,idToken,fname,lname, String.valueOf(isGoogle), email).enqueue(new Callback<Map<String, String>>() {
             @Override
-            public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+            public void onResponse(@NonNull Call<Map<String, String>> call, @NonNull Response<Map<String, String>> response) {
                 if(response.body().get("error") != null)  signInApiCall(user,idToken);
                 else handleResponse(response);
             }
 
             @Override
-            public void onFailure(Call<Map<String, String>> call, Throwable t) {
+            public void onFailure(@NonNull Call<Map<String, String>> call, @NonNull Throwable t) {
                 Toast.makeText(SignInActivity.this, "Failed", Toast.LENGTH_SHORT).show();
             }
         });
@@ -183,12 +183,12 @@ public class SignInActivity extends AppCompatActivity {
 
         RestAPI.Companion.getAppService().signIn(user, String.valueOf(isGoogle), idToken).enqueue(new Callback<Map<String, String>>() {
             @Override
-            public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+            public void onResponse(@NonNull Call<Map<String, String>> call, @NonNull Response<Map<String, String>> response) {
                 handleResponse(response);
             }
 
             @Override
-            public void onFailure(Call<Map<String, String>> call, Throwable t) {
+            public void onFailure(@NonNull Call<Map<String, String>> call, @NonNull Throwable t) {
                 Toast.makeText(SignInActivity.this, "Failed", Toast.LENGTH_SHORT).show();
             }
         });
