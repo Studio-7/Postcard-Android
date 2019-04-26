@@ -14,7 +14,7 @@ class LocalStorageHelper(var context: Context?) {
         }
     }
 
-    fun getFromProfile(key: String, default: String): String? {
+    fun getFromProfile(key: String, default: String?): String? {
         val sharedPref = context!!.getSharedPreferences(context!!.getString(R.string.profile_file_key), Context.MODE_PRIVATE)
         val highScore = sharedPref.getString(key, default)
         return highScore

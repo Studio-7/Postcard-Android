@@ -1,6 +1,5 @@
 package com.studioseven.postcard.Fragments
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ClipData
@@ -20,7 +19,6 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.ContextCompat.getSystemService
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -29,7 +27,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.Toast
 import com.studioseven.postcard.Adapters.PostcardAdapter
 import com.studioseven.postcard.Constants
@@ -90,7 +87,7 @@ class HomeFragment : Fragment() {
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             Log.d("TAG", location.longitude.toString()  + " " + location.latitude.toString())
-            Constants.location = location.latitude.toString() + "," + location.longitude.toString()
+            Constants.location = location.longitude.toString() + "," + location.latitude.toString()
         }
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
         override fun onProviderEnabled(provider: String) {}
@@ -149,12 +146,25 @@ class HomeFragment : Fragment() {
         }
 
         //fetchFeed()
+        //fetch details of previous capsule
+        capsuleId = localStorageHelper.getFromProfile(context!!.getString(R.string.prevCapsuleId), null)
+        capsuleTitle = localStorageHelper.getFromProfile(context!!.getString(R.string.prevCapsuleTitle), null)
+        capsuleMessage = localStorageHelper.getFromProfile(context!!.getString(R.string.prevCapsuleMessage), null)
+        Log.d("TAG", capsuleId + " " + capsuleTitle + " " + capsuleMessage)
 
         //Bottom sheet
         val fab : FloatingActionButton = view?.findViewById(R.id.floating)!!
         fab.setOnClickListener {
             locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
-            showAlertDialogue()
+            //showAlertDialogue()
+            capsuleId = localStorageHelper.getFromProfile(context!!.getString(R.string.prevCapsuleId), null)
+            if(capsuleId == null){
+                //if no previous capsule is created then always create a new capsule
+                showAlertDialogue()
+            } else {
+                //if previous capsule exists then give option to user wheather to upload to new or existing capsule
+                showDialog()
+            }
         }
 
         return view
@@ -184,6 +194,25 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun showDialog(){
+        val array = arrayOf("Add to existing capsule", "Create new capsule")
+        val builder = AlertDialog.Builder(context!!)
+        builder.setTitle("Upload media")
+        builder.setItems(array) { _, which ->
+            if (which == 0){
+                val bottomSheet = BottomSheet()
+                bottomSheet.setParentFragment(this)
+                bottomSheet.show(fragmentManager, "bottomsheet")
+            } else{
+                showAlertDialogue()
+            }
+
+        }
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+
     private fun showAlertDialogue() {
         val builder = AlertDialog.Builder(context!!)
         var dialogInflater: LayoutInflater = LayoutInflater.from(context)
@@ -202,6 +231,9 @@ class HomeFragment : Fragment() {
             if (isValid) {
                 capsuleTitle = newCategory.toString()
                 capsuleMessage = messageEditText.text.toString()
+                //save capsule title and message to shared preference
+                localStorageHelper.saveToProfile(context!!.getString(R.string.prevCapsuleTitle), capsuleTitle)
+                localStorageHelper.saveToProfile(context!!.getString(R.string.prevCapsuleMessage), capsuleMessage)
                 val bottomSheet = BottomSheet()
                 bottomSheet.setParentFragment(this)
                 bottomSheet.show(fragmentManager, "bottomsheet")
@@ -247,8 +279,9 @@ class HomeFragment : Fragment() {
 
                 override fun onResponse(call: Call<Map<String, String>>, response: Response<Map<String, String>>) {
                     capsuleId = response.body()!!["travelcapsule"]
+                    localStorageHelper.saveToProfile(context!!.getString(R.string.prevCapsuleId), capsuleId)
                     token = response.body()!!["token"]
-                    Log.d("TAG", response.body()!!["result"])
+                    Log.d("TAG", capsuleId)
                     localStorageHelper.updateToken(token!!)
                     //Log.d("TAG", token)
                     for (i in 0..(selectedMediaUri.itemCount - 1)) {
@@ -280,9 +313,10 @@ class HomeFragment : Fragment() {
             val titleRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleTitle)
             val messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleMessage)
             val idRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleId)
+            val locationRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, Constants.location)
 
             RestAPI.getAppService()
-                .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody)
+                .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody, locationRequestBody)
                 .enqueue(object : Callback<Map<String, String>> {
                     override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
                         Log.d("TAG", t.message)
@@ -293,7 +327,6 @@ class HomeFragment : Fragment() {
                     ) {
                         capsuleId = response.body()!!["travelcapsule"]
                         token = response.body()!!["token"]
-                        Log.d("TAG", response.body().toString())
                     }
 
                 })
@@ -316,9 +349,10 @@ class HomeFragment : Fragment() {
             val titleRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleTitle)
             val messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleMessage)
             val idRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleId)
+            val locationRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, Constants.location)
 
             RestAPI.getAppService()
-                .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody)
+                .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody, locationRequestBody)
                 .enqueue(object : Callback<Map<String, String>> {
                     override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
                         Log.d("TAG", t.message)
@@ -329,7 +363,6 @@ class HomeFragment : Fragment() {
                     ) {
                         capsuleId = response.body()!!["travelcapsule"]
                         token = response.body()!!["token"]
-                        Log.d("TAG", response.body().toString())
                     }
 
                 })
