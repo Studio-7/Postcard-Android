@@ -84,8 +84,10 @@ class PostcardAdapter(private val postcardList: List<Postcard>, private val cont
             myViewHolder = holder
         }
 
-        Picasso.get().load(postcardList[position].mediaLinkList[holder.imageScroll.currentItem].url)
-            .into(holder.postImage)
+        var url = postcardList[position].mediaLinkList[holder.imageScroll.currentItem].url
+        if(url == "") url ="https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM"
+
+        Picasso.get().load(url).into(holder.postImage)
 
 
         holder.image_heart_white.setOnClickListener {
@@ -101,7 +103,10 @@ class PostcardAdapter(private val postcardList: List<Postcard>, private val cont
     override fun onCurrentItemChanged(holder: ImageAdapter.ViewHolder?, position: Int) {
         //viewHolder will never be null, because we never remove items from adapter's list
         if (holder != null) {
-            Picasso.get().load(postcardList[myViewHolder.adapterPosition].mediaLinkList[myViewHolder.imageScroll.currentItem].url)
+            var url = postcardList[myViewHolder.adapterPosition].mediaLinkList[myViewHolder.imageScroll.currentItem].url
+            if(url == "") url ="https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM"
+
+            Picasso.get().load(url)
                 .into(myViewHolder.postImage)
         }
     }

@@ -43,7 +43,7 @@ public class OptionAdapter extends RecyclerView.Adapter<OptionAdapter.OptionView
     @Override
     public OptionViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View itemView = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.questionCard, viewGroup, false);
+                .inflate(R.layout.question_card, viewGroup, false);
 
         return new OptionViewHolder(itemView);
     }

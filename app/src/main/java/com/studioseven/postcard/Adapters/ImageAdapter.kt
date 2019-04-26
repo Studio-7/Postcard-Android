@@ -34,7 +34,9 @@ class ImageAdapter(private val items: List<Image>) :
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: ViewHolder, position: Int){
-        Picasso.get().load(items[position].url).into(holder.imageView)
+        var url = items[position].url
+        if(url == "") url ="https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM"
+        Picasso.get().load(url).into(holder.imageView)
     }
 
     // Return the size of your dataset (invoked by the layout manager)
