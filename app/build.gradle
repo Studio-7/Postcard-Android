@@ -86,4 +86,7 @@ dependencies {
 
     //FileUtils
     implementation 'org.apache.commons:commons-io:1.3.2'
+
+    // Shimmer Loading
+    implementation 'com.facebook.shimmer:shimmer:0.4.0'
 }

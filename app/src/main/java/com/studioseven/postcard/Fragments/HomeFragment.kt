@@ -31,6 +31,7 @@ import com.studioseven.postcard.Models.Postcard
 import com.studioseven.postcard.Network.RestAPI
 import com.studioseven.postcard.R
 import com.studioseven.postcard.Utils.LocalStorageHelper
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -68,12 +69,13 @@ class HomeFragment : Fragment() {
     private var capsuleTitle: String? = null
     private var capsuleId: String? = null
     private var token: String? = null
-    private var errorMsg:String? = null
-    private var isCompleted:Boolean = false
+
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
+
+    var postCardList: List<Postcard> = listOf()
 
     lateinit var localStorageHelper: LocalStorageHelper
 
@@ -95,9 +97,9 @@ class HomeFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        viewManager = LinearLayoutManager(view.context)
+        view.postcardShimmer.visibility = View.VISIBLE
 
-        val images: List<Image> = listOf(
+        /*val images: List<Image> = listOf(
             Image("https://i.pinimg.com/originals/be/86/1b/be861bdfb1a6f38395c426123efa6ee6.jpg"),
             Image("https://images-na.ssl-images-amazon.com/images/I/71Lo6ZgNLrL._SL1200_.jpg"),
             Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrAzB3dynTfZ4CioA56_XksdHsXMZUZgv4HfSb5O9js5BBjEix"),
@@ -106,24 +108,14 @@ class HomeFragment : Fragment() {
             Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFaEOzIwdDMy5O5m7t5qMnQVIbU5WVpfxaD40PoI528PIPOLQQcg")
         )
 
-        viewAdapter = PostcardAdapter(
-            listOf(Postcard("abhishek", "Kanchi", 123, 30,
-                    listOf("Hariharan", "Arko"),"2 days ago",
-                false, images, "https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM"),
-                    Postcard("arko", "Kanchi", 123, 30,
-                    listOf("Hariharan", "Arko"),"2 days ago",
-                false, images, "https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM"))
-            , view.context)
+        postCardList = listOf(Postcard("abhishek", "Kanchi", "123",
+            listOf("Hariharan", "Arko"),"2 days ago",
+            false, images, "https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM"),
+            Postcard("abhishek", "Kanchi", "123",
+                listOf("Hariharan", "Arko"),"2 days ago",
+                false, images, "https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM"))*/
 
-        recyclerView = view.postcardRv.apply {
-            setHasFixedSize(true)
-
-            layoutManager = viewManager
-
-            adapter = viewAdapter
-        }
-
-        fetchFeed()
+        fetchFeed(view)
 
         //Bottom sheet
         val fab : FloatingActionButton = view?.findViewById(R.id.floating)!!
@@ -134,27 +126,82 @@ class HomeFragment : Fragment() {
         return view
     }
 
-    fun fetchFeed(){
+    fun fetchFeed(view: View) {
         RestAPI.getAppService().search(Constants.userId,Constants.token, "1 2 3").
             enqueue(object: Callback<Map<String, Any>>{
                 override fun onResponse(call: Call<Map<String, Any>>, response: Response<Map<String, Any>>) {
                     if(response.body()?.get("error") == null){
                         localStorageHelper.updateToken(response.body()?.get("token"))
-                        populateUI(response.body()?.get("result"))
+                        populateUI(response.body()?.get("result"),0, view)
                     }
                 }
 
                 override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    Toast.makeText(context, "Feed fetch failed", Toast.LENGTH_SHORT).show()
                 }
             })
 
     }
 
-    private fun populateUI(result: Map<String, Any>?) {
-        Toast.makeText(context, "Hurray", Toast.LENGTH_SHORT).show()
-        for (postcard in result?.values!!){
+    private fun populateUI(result: Collection<Map<String, Any>>?, i: Int, view: View) {
 
+        if(i == result!!.size){
+            setUpRecycler(view)
+            return
+        }
+
+        val postcard = (result as List<Map<String, Any>>)[i]
+
+        var postList = "" //comma separated list of postIds
+        for(post in postcard["posts"] as Collection<*>){
+            postList += (post as String + ",")
+        }
+        postList.dropLast(1)
+
+        RestAPI.getAppService().getPosts(Constants.userId, Constants.token, postList).enqueue(object: Callback<Map<String, Any>>{
+            override fun onResponse(call: Call<Map<String, Any>>, response: Response<Map<String, Any>>) {
+                localStorageHelper.updateToken(response.body()?.get("token") as String)
+                if(response.body()?.get("error") == null){
+                    fillPostcardList(postcard, response.body()?.get("result") as Collection<Map<*, *>>)
+                    populateUI(result, i+1, view)
+                }else Toast.makeText(context, "Post fetch failed", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
+                Toast.makeText(context, "Post fetch failed", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+
+    }
+
+    private fun fillPostcardList(postcard: Map<String, Any>, postList: Collection<Map<*, *>>) {
+        var images: List<Image> = listOf()
+
+        for(postMap in postList){
+            images = images + Image((((postMap["post"] as Map<*, *>)["PostBody"] as Map<*, *>)["Img"] as Map<*, *>)["Link"] as String)
+        }
+
+        val pc = Postcard(postcard["created_by"] as String, postcard["title"] as String, (postcard["likes"] as Double).toString(),
+            listOf("Hariharan", "Arko"),"2 days ago",
+            false, images, "https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM")
+
+        postCardList = postCardList + pc
+    }
+
+    private fun setUpRecycler(view: View) {
+        postcardShimmer.visibility = View.GONE
+
+        viewManager = LinearLayoutManager(view.context)
+
+        viewAdapter = PostcardAdapter(postCardList, view.context)
+
+        recyclerView = view.postcardRv.apply {
+            setHasFixedSize(true)
+
+            layoutManager = viewManager
+
+            adapter = viewAdapter
         }
     }
 

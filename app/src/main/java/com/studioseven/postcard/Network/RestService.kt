@@ -46,6 +46,12 @@ interface RestService {
     @FormUrlEncoded
     @POST("/feed/main")
     fun getFeed(@Field("username") username: String,
-               @Field("token") token: String): Call<Map<String, Any>>
+                @Field("token") token: String): Call<Map<String, Any>>
+
+    @FormUrlEncoded
+    @POST("/post/getpost")
+    fun getPosts(@Field("username") username: String,
+                 @Field("token") token: String,
+                 @Field("ids") ids: String): Call<Map<String, Any>>
 }
 
