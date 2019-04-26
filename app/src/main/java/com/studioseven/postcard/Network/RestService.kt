@@ -35,7 +35,8 @@ interface RestService {
                   @Part("title") title: RequestBody,
                   @Part("message") message: RequestBody,
                   @Part file: MultipartBody.Part,
-                  @Part("travelcapsule") id: RequestBody): Call<Map<String, String>>
+                  @Part("travelcapsule") id: RequestBody,
+                  @Part("location") location: RequestBody): Call<Map<String, String>>
 
     @FormUrlEncoded
     @POST("/search/find")
