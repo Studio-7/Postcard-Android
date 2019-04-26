@@ -98,7 +98,8 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+        val permissions = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                                    android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         ActivityCompat.requestPermissions(context as Activity, permissions,0)
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -165,7 +166,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchFeed(view: View) {
-        RestAPI.getAppService().search(Constants.userId,Constants.token, "1 2 3").
+        RestAPI.getAppService().getFeed(Constants.userId,Constants.token).
             enqueue(object: Callback<Map<String, Any>>{
                 override fun onResponse(call: Call<Map<String, Any>>, response: Response<Map<String, Any>>) {
                     if(response.body()?.get("error") == null){
@@ -183,7 +184,12 @@ class HomeFragment : Fragment() {
 
     private fun populateUI(result: Collection<Map<String, Any>>?, i: Int, view: View) {
 
-        if(i == result!!.size){
+        if(result == null){
+            postcardShimmer.visibility = View.GONE
+            Toast.makeText(context, "No posts to show :(", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if(i == result.size){
             setUpRecycler(view)
             return
         }
@@ -191,7 +197,7 @@ class HomeFragment : Fragment() {
         val postcard = (result as List<Map<String, Any>>)[i]
 
         var postList = "" //comma separated list of postIds
-        for(post in postcard["posts"] as Collection<*>){
+        for(post in postcard["Posts"] as Collection<*>){
             postList += (post as String + ",")
         }
         postList.dropLast(1)
@@ -220,7 +226,7 @@ class HomeFragment : Fragment() {
             images = images + Image((((postMap["post"] as Map<*, *>)["PostBody"] as Map<*, *>)["Img"] as Map<*, *>)["Link"] as String)
         }
 
-        val pc = Postcard(postcard["created_by"] as String, postcard["title"] as String, (postcard["likes"] as Double).toString(),
+        val pc = Postcard(postcard["CreatedBy"] as String, postcard["Title"] as String, (postcard["Likes"] as Double).toString(),
             listOf("Hariharan", "Arko"),"2 days ago",
             false, images, "https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM")
 
@@ -351,6 +357,7 @@ class HomeFragment : Fragment() {
 
     private fun createCapsule(selectedMediaUri :ClipData){
         Log.d("TAG", Constants.token)
+        homeProgressBar.visibility = View.VISIBLE
         RestAPI.getAppService().createCapsule(Constants.token, Constants.userId, capsuleTitle!!)
             .enqueue(object : Callback<Map<String, String>> {
                 override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
@@ -380,6 +387,7 @@ class HomeFragment : Fragment() {
 
     // convert all images to byteArrays and send to server
     fun makeAPICallImage(imageUri :Uri){
+        homeProgressBar.visibility = View.VISIBLE
         doAsync {
             val file = File(imageUri.path)
             Log.d("TAG", file.toString())
@@ -387,7 +395,7 @@ class HomeFragment : Fragment() {
                 MediaType.parse("image/jpeg"),
                          file
              )
-            val body: MultipartBody.Part = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+            val body: MultipartBody.Part = MultipartBody.Part.createFormData("image", file.getName(), requestFile)
             val tokenRequestBody = RequestBody.create(MultipartBody.FORM, Constants.token)
             val usernameRequestBody = RequestBody.create(MultipartBody.FORM, Constants.userId)
             val titleRequestBody = RequestBody.create(MultipartBody.FORM, capsuleTitle)
@@ -400,14 +408,20 @@ class HomeFragment : Fragment() {
                 .enqueue(object : Callback<Map<String, String>> {
                     override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
                         Log.d("TAG", t.message)
+                        homeProgressBar.visibility = View.GONE
+                        Toast.makeText(context, "Failed Image Upload ${t.message}", Toast.LENGTH_SHORT).show()
                     }
                     override fun onResponse(
                         call: Call<Map<String, String>>,
                         response: Response<Map<String, String>>
                     ) {
+                        homeProgressBar.visibility = View.GONE
                         capsuleId = response.body()!!["travelcapsule"]
+                        localStorageHelper.saveToProfile(context!!.getString(R.string.prevCapsuleId), capsuleId)
                         token = response.body()!!["token"]
                         localStorageHelper.updateToken(token)
+
+                        Toast.makeText(context, response.body()!!.getValue("result"), Toast.LENGTH_SHORT).show()
                     }
 
                 })
@@ -437,14 +451,19 @@ class HomeFragment : Fragment() {
                 .enqueue(object : Callback<Map<String, String>> {
                     override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
                         Log.d("TAG", t.message)
+                        homeProgressBar.visibility = View.GONE
+                        Toast.makeText(context, "Failed Video Upload ${t.message}", Toast.LENGTH_SHORT).show()
                     }
                     override fun onResponse(
                         call: Call<Map<String, String>>,
                         response: Response<Map<String, String>>
                     ) {
+                        homeProgressBar.visibility = View.GONE
                         capsuleId = response.body()!!["travelcapsule"]
                         token = response.body()!!["token"]
                         localStorageHelper.updateToken(token)
+
+                        Toast.makeText(context, response.body()!!.getValue("result"), Toast.LENGTH_SHORT).show()
                     }
 
                 })
@@ -487,19 +506,18 @@ class HomeFragment : Fragment() {
     }
 
     private fun isStoragePermissionGranted(): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(context!!, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 Log.v("TAG", "Permission is granted")
-                return true
+                true
             } else {
-
                 Log.v("TAG", "Permission is revoked")
-                ActivityCompat.requestPermissions(activity!!, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 3)
-                return false
+                requestPermissions(arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 3)
+                false
             }
         } else { //permission is automatically granted on sdk<23 upon installation
             Log.v("TAG", "Permission is granted")
-            return true
+            true
         }
     }
 

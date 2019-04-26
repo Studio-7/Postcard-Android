@@ -151,6 +151,7 @@ public class SignInActivity extends AppCompatActivity {
 
         // Sign up for the first time, else sign in
         SharedPreferences sharedPreferences = getSharedPreferences("Auth", Context.MODE_PRIVATE);
+        sharedPreferences.edit().putBoolean("SIGNEDUP", false).apply();
         if(!sharedPreferences.getBoolean("SIGNEDUP", false)){
             sharedPreferences.edit().putBoolean("SIGNEDUP", true).apply();
             signUpApiCal(userId,idToken,fname,lname,email);

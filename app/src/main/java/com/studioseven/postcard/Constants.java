@@ -6,7 +6,7 @@ package com.studioseven.postcard;
 
 public class Constants {
 
-    public static final String BASE_URL = "http://postcard.ga";
+    public static final String BASE_URL = "https://postcard.ga";
 
     public static String token = "";
     public static String userId = "";
