@@ -1,6 +1,5 @@
 package com.studioseven.postcard.Fragments
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ClipData
@@ -20,7 +19,6 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.ContextCompat.getSystemService
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -30,7 +28,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.Toast
 import com.studioseven.postcard.Adapters.PostcardAdapter
 import com.studioseven.postcard.Constants
@@ -39,6 +36,7 @@ import com.studioseven.postcard.Models.Postcard
 import com.studioseven.postcard.Network.RestAPI
 import com.studioseven.postcard.R
 import com.studioseven.postcard.Utils.LocalStorageHelper
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -77,12 +75,13 @@ class HomeFragment : Fragment() {
     private var capsuleMessage: String? = null
     private var capsuleId: String? = null
     private var token: String? = null
-    private var errorMsg:String? = null
-    private var isCompleted:Boolean = false
+
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
+
+    var postCardList: List<Postcard> = listOf()
 
     private var locationManager : LocationManager? = null
 
@@ -91,7 +90,7 @@ class HomeFragment : Fragment() {
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             Log.d("TAG", location.longitude.toString()  + " " + location.latitude.toString())
-            Constants.location = location.latitude.toString() + "," + location.longitude.toString()
+            Constants.location = location.longitude.toString() + "," + location.latitude.toString()
         }
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
         override fun onProviderEnabled(provider: String) {}
@@ -121,9 +120,9 @@ class HomeFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        viewManager = LinearLayoutManager(view.context)
+        view.postcardShimmer.visibility = View.VISIBLE
 
-        val images: List<Image> = listOf(
+        /*val images: List<Image> = listOf(
             Image("https://i.pinimg.com/originals/be/86/1b/be861bdfb1a6f38395c426123efa6ee6.jpg"),
             Image("https://images-na.ssl-images-amazon.com/images/I/71Lo6ZgNLrL._SL1200_.jpg"),
             Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrAzB3dynTfZ4CioA56_XksdHsXMZUZgv4HfSb5O9js5BBjEix"),
@@ -132,14 +131,108 @@ class HomeFragment : Fragment() {
             Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFaEOzIwdDMy5O5m7t5qMnQVIbU5WVpfxaD40PoI528PIPOLQQcg")
         )
 
-        viewAdapter = PostcardAdapter(
-            listOf(Postcard("abhishek", "Kanchi", 123, 30,
-                    listOf("Hariharan", "Arko"),"2 days ago",
-                false, images, "https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM"),
-                    Postcard("arko", "Kanchi", 123, 30,
-                    listOf("Hariharan", "Arko"),"2 days ago",
-                false, images, "https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM"))
-            , view.context)
+        postCardList = listOf(Postcard("abhishek", "Kanchi", "123",
+            listOf("Hariharan", "Arko"),"2 days ago",
+            false, images, "https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM"),
+            Postcard("abhishek", "Kanchi", "123",
+                listOf("Hariharan", "Arko"),"2 days ago",
+                false, images, "https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM"))*/
+
+        fetchFeed(view)
+
+        //fetch details of previous capsule
+        capsuleId = localStorageHelper.getFromProfile(context!!.getString(R.string.prevCapsuleId), null)
+        capsuleTitle = localStorageHelper.getFromProfile(context!!.getString(R.string.prevCapsuleTitle), null)
+        capsuleMessage = localStorageHelper.getFromProfile(context!!.getString(R.string.prevCapsuleMessage), null)
+        Log.d("TAG", capsuleId + " " + capsuleTitle + " " + capsuleMessage)
+
+        //Bottom sheet
+        val fab : FloatingActionButton = view?.findViewById(R.id.floating)!!
+        fab.setOnClickListener {
+            locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
+            //showAlertDialogue()
+            capsuleId = localStorageHelper.getFromProfile(context!!.getString(R.string.prevCapsuleId), null)
+            if(capsuleId == null){
+                //if no previous capsule is created then always create a new capsule
+                showAlertDialogue()
+            } else {
+                //if previous capsule exists then give option to user wheather to upload to new or existing capsule
+                showDialog()
+            }
+        }
+
+        return view
+    }
+
+    fun fetchFeed(view: View) {
+        RestAPI.getAppService().search(Constants.userId,Constants.token, "1 2 3").
+            enqueue(object: Callback<Map<String, Any>>{
+                override fun onResponse(call: Call<Map<String, Any>>, response: Response<Map<String, Any>>) {
+                    if(response.body()?.get("error") == null){
+                        localStorageHelper.updateToken(response.body()?.get("token"))
+                        populateUI(response.body()?.get("result"),0, view)
+                    }
+                }
+
+                override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
+                    Toast.makeText(context, "Feed fetch failed", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+    }
+
+    private fun populateUI(result: Collection<Map<String, Any>>?, i: Int, view: View) {
+
+        if(i == result!!.size){
+            setUpRecycler(view)
+            return
+        }
+
+        val postcard = (result as List<Map<String, Any>>)[i]
+
+        var postList = "" //comma separated list of postIds
+        for(post in postcard["posts"] as Collection<*>){
+            postList += (post as String + ",")
+        }
+        postList.dropLast(1)
+
+        RestAPI.getAppService().getPosts(Constants.userId, Constants.token, postList).enqueue(object: Callback<Map<String, Any>>{
+            override fun onResponse(call: Call<Map<String, Any>>, response: Response<Map<String, Any>>) {
+                localStorageHelper.updateToken(response.body()?.get("token") as String)
+                if(response.body()?.get("error") == null){
+                    fillPostcardList(postcard, response.body()?.get("result") as Collection<Map<*, *>>)
+                    populateUI(result, i+1, view)
+                }else Toast.makeText(context, "Post fetch failed", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
+                Toast.makeText(context, "Post fetch failed", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+
+    }
+
+    private fun fillPostcardList(postcard: Map<String, Any>, postList: Collection<Map<*, *>>) {
+        var images: List<Image> = listOf()
+
+        for(postMap in postList){
+            images = images + Image((((postMap["post"] as Map<*, *>)["PostBody"] as Map<*, *>)["Img"] as Map<*, *>)["Link"] as String)
+        }
+
+        val pc = Postcard(postcard["created_by"] as String, postcard["title"] as String, (postcard["likes"] as Double).toString(),
+            listOf("Hariharan", "Arko"),"2 days ago",
+            false, images, "https://media.licdn.com/dms/image/C5103AQFZ1Xq-UNwjpw/profile-displayphoto-shrink_800_800/0?e=1560384000&v=beta&t=INl5kK-hwQRyIvNZeo-703mYOjn8RIXUgoenZVEVczM")
+
+        postCardList = postCardList + pc
+    }
+
+    private fun setUpRecycler(view: View) {
+        postcardShimmer.visibility = View.GONE
+
+        viewManager = LinearLayoutManager(view.context)
+
+        viewAdapter = PostcardAdapter(postCardList, view.context)
 
         recyclerView = view.postcardRv.apply {
             setHasFixedSize(true)
@@ -148,42 +241,26 @@ class HomeFragment : Fragment() {
 
             adapter = viewAdapter
         }
-
-        //fetchFeed()
-
-        //Bottom sheet
-        val fab : FloatingActionButton = view?.findViewById(R.id.floating)!!
-        fab.setOnClickListener {
-            locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
-            showAlertDialogue()
-        }
-
-        return view
     }
 
-    /*fun fetchFeed(){
-        RestAPI.getAppService().search(Constants.userId,Constants.token, "1 2 3").
-            enqueue(object: Callback<Map<String, Any>>{
-                override fun onResponse(call: Call<Map<String, Any>>, response: Response<Map<String, Any>>) {
-                    if(response.body()?.get("error") == null){
-                        localStorageHelper.updateToken(response.body()?.get("token"))
-                        populateUI(response.body()?.get("result"))
-                    }
-                }
-
-                override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-            })
-
-    }*/
-
-    private fun populateUI(result: Map<String, Any>?) {
-        Toast.makeText(context, "Hurray", Toast.LENGTH_SHORT).show()
-        for (postcard in result?.values!!){
+    private fun showDialog(){
+        val array = arrayOf("Add to existing capsule", "Create new capsule")
+        val builder = AlertDialog.Builder(context!!)
+        builder.setTitle("Upload media")
+        builder.setItems(array) { _, which ->
+            if (which == 0){
+                val bottomSheet = BottomSheet()
+                bottomSheet.setParentFragment(this)
+                bottomSheet.show(fragmentManager, "bottomsheet")
+            } else{
+                showAlertDialogue()
+            }
 
         }
+        val dialog = builder.create()
+        dialog.show()
     }
+
 
     private fun showAlertDialogue() {
         val builder = AlertDialog.Builder(context!!)
@@ -197,10 +274,6 @@ class HomeFragment : Fragment() {
 
 
             new_capsule.setOnClickListener{
-
-
-
-
                 val builder1 = AlertDialog.Builder(context!!)
                 var dialogInflater1: LayoutInflater = LayoutInflater.from(context)
                 var dialogView1: View = dialogInflater1.inflate(R.layout.custom_dialog, null);
@@ -225,6 +298,9 @@ class HomeFragment : Fragment() {
                     if (isValid) {
                         capsuleTitle = newCategory.toString()
                         capsuleMessage = messageEditText.text.toString()
+                        //save capsule title and message to shared preference
+                        localStorageHelper.saveToProfile(context!!.getString(R.string.prevCapsuleTitle), capsuleTitle)
+                        localStorageHelper.saveToProfile(context!!.getString(R.string.prevCapsuleMessage), capsuleMessage)
                         val bottomSheet = BottomSheet()
                         bottomSheet.setParentFragment(this)
                         bottomSheet.show(fragmentManager, "bottomsheet")
@@ -243,15 +319,11 @@ class HomeFragment : Fragment() {
 
             }
 
-
-
-
         existing_capsule.setOnClickListener {
             val bottomSheet = BottomSheet()
             bottomSheet.setParentFragment(this)
             bottomSheet.show(fragmentManager, "bottomsheet")
             dialog1.dismiss()
-
         }
 
     }
@@ -287,8 +359,9 @@ class HomeFragment : Fragment() {
 
                 override fun onResponse(call: Call<Map<String, String>>, response: Response<Map<String, String>>) {
                     capsuleId = response.body()!!["travelcapsule"]
+                    localStorageHelper.saveToProfile(context!!.getString(R.string.prevCapsuleId), capsuleId)
                     token = response.body()!!["token"]
-                    Log.d("TAG", response.body()!!["result"])
+                    Log.d("TAG", capsuleId)
                     localStorageHelper.updateToken(token!!)
                     //Log.d("TAG", token)
                     for (i in 0..(selectedMediaUri.itemCount - 1)) {
@@ -320,9 +393,10 @@ class HomeFragment : Fragment() {
             val titleRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleTitle)
             val messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleMessage)
             val idRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleId)
+            val locationRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, Constants.location)
 
             RestAPI.getAppService()
-                .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody)
+                .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody, locationRequestBody)
                 .enqueue(object : Callback<Map<String, String>> {
                     override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
                         Log.d("TAG", t.message)
@@ -333,7 +407,6 @@ class HomeFragment : Fragment() {
                     ) {
                         capsuleId = response.body()!!["travelcapsule"]
                         token = response.body()!!["token"]
-                        Log.d("TAG", response.body().toString())
                     }
 
                 })
@@ -356,9 +429,10 @@ class HomeFragment : Fragment() {
             val titleRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleTitle)
             val messageRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleMessage)
             val idRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, capsuleId)
+            val locationRequestBody = RequestBody.create(okhttp3.MultipartBody.FORM, Constants.location)
 
             RestAPI.getAppService()
-                .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody)
+                .postMedia(tokenRequestBody, usernameRequestBody, titleRequestBody, messageRequestBody, body, idRequestBody, locationRequestBody)
                 .enqueue(object : Callback<Map<String, String>> {
                     override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
                         Log.d("TAG", t.message)
@@ -369,7 +443,6 @@ class HomeFragment : Fragment() {
                     ) {
                         capsuleId = response.body()!!["travelcapsule"]
                         token = response.body()!!["token"]
-                        Log.d("TAG", response.body().toString())
                     }
 
                 })

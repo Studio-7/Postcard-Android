@@ -17,7 +17,7 @@ import com.yarolegovich.discretescrollview.transform.ScaleTransformer
 import kotlinx.android.synthetic.main.item_postcard.view.*
 
 
-class PostcardAdapter(private val postcardList: List<Postcard>, private val context: Context) :
+class PostcardAdapter(private val postcardList: List<Postcard>, private val context: Context?) :
     RecyclerView.Adapter<PostcardAdapter.MyViewHolder>(),
     DiscreteScrollView.OnItemChangedListener<ImageAdapter.ViewHolder> {
 
@@ -67,7 +67,7 @@ class PostcardAdapter(private val postcardList: List<Postcard>, private val cont
         holder.postImage.setOnClickListener{
             val myIntent = Intent(context, ImageScreenActivity::class.java)
             myIntent.putExtra("imageUrl", postcardList[position].mediaLinkList[holder.imageScroll.currentItem].url) //Optional parameters
-            context.startActivity(myIntent)
+            context!!.startActivity(myIntent)
         }
 
         holder.imageScroll.adapter = ImageAdapter(postcardList[position].mediaLinkList)

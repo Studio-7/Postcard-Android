@@ -35,7 +35,8 @@ interface RestService {
                   @Part("title") title: RequestBody,
                   @Part("message") message: RequestBody,
                   @Part file: MultipartBody.Part,
-                  @Part("travelcapsule") id: RequestBody): Call<Map<String, String>>
+                  @Part("travelcapsule") id: RequestBody,
+                  @Part("location") location: RequestBody): Call<Map<String, String>>
 
     @FormUrlEncoded
     @POST("/search/find")
@@ -46,6 +47,12 @@ interface RestService {
     @FormUrlEncoded
     @POST("/feed/main")
     fun getFeed(@Field("username") username: String,
-               @Field("token") token: String): Call<Map<String, Any>>
+                @Field("token") token: String): Call<Map<String, Any>>
+
+    @FormUrlEncoded
+    @POST("/post/getpost")
+    fun getPosts(@Field("username") username: String,
+                 @Field("token") token: String,
+                 @Field("ids") ids: String): Call<Map<String, Any>>
 }
 

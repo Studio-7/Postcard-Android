@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:app="http://schemas.android.com/apk/res-auto"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context=".Fragments.HomeFragment">
 
+    <ScrollView
+            android:layout_width="match_parent"
+            android:id="@+id/postcardShimmer"
+            android:layout_height="match_parent">
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <include layout="@layout/item_postcard_shimmer" android:id="@+id/pcs1"/>
+            <include layout="@layout/item_postcard_shimmer" android:id="@+id/pcs2"
+                     android:layout_height="wrap_content"
+                     android:layout_width="wrap_content"
+                    android:layout_below="@+id/pcs1"/>
+        </RelativeLayout>
+    </ScrollView>
+
     <android.support.v7.widget.RecyclerView
             android:id="@+id/postcardRv"
             android:scrollbars="vertical"
+            android:layout_below="@+id/postcardShimmer"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
     </android.support.v7.widget.RecyclerView>
@@ -17,10 +33,12 @@
             android:id="@+id/floating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginRight="30dp"
             android:layout_marginBottom="60dp"
             app:srcCompat="@drawable/ic_add_24px"
-            android:layout_marginEnd="30dp"/>
+            android:layout_marginEnd="30dp"
+            android:layout_alignParentRight="true"/>
 
-</FrameLayout>
+</RelativeLayout>
