@@ -8,7 +8,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -28,7 +32,7 @@ public class SignInActivity extends AppCompatActivity {
     Button obtn;
     ImageView gbtn;
     EditText username,pass;
-    ProgressBar progressBar;
+    ShimmerFrameLayout logoShimmer;
 
     String idToken, userId,fname,lname,email,result,token, displayName;
     boolean isGoogle = false;
@@ -48,7 +52,7 @@ public class SignInActivity extends AppCompatActivity {
         obtn=findViewById(R.id.Login);
         username=findViewById(R.id.Username);
         pass=findViewById(R.id.password);
-        progressBar = findViewById(R.id.progressBar);
+        logoShimmer=findViewById(R.id.logoShimmerSignIn);
 
         GoogleSignInOptions gso=new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.server_clientid))
@@ -156,7 +160,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void signUpApiCal(final String user, final String idToken, String fname, String lname, final String email) {
-        progressBar.setVisibility(View.VISIBLE);
+        startShimmer();
         Toast.makeText(this, "Signing Up...", Toast.LENGTH_SHORT).show();
 
         RestAPI.Companion.getAppService().signUp(user,idToken,fname,lname, String.valueOf(isGoogle), email).enqueue(new Callback<Map<String, String>>() {
@@ -174,7 +178,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     void signInApiCall(String user,String idToken) {
-        progressBar.setVisibility(View.VISIBLE);
+        startShimmer();
         Toast.makeText(this, "Signing In...", Toast.LENGTH_SHORT).show();
 
         RestAPI.Companion.getAppService().signIn(user, String.valueOf(isGoogle), idToken).enqueue(new Callback<Map<String, String>>() {
@@ -190,13 +194,18 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
+    private void startShimmer() {
+        findViewById(R.id.signInLogo).setVisibility(View.GONE);
+        logoShimmer.setVisibility(View.VISIBLE);
+    }
+
     private void handleResponse(Response<Map<String, String>> response) {
         Map<String, String> hm;
         hm = response.body();
         result=hm.get("result");
         token=hm.get("token");
 
-        progressBar.setVisibility(View.GONE);
+        stopShimmer();
 
         if(hm.get("error") == null){
             //update token in local storage
@@ -209,6 +218,11 @@ public class SignInActivity extends AppCompatActivity {
         }else{
             Toast.makeText(getApplicationContext(), hm.get("error"), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void stopShimmer() {
+        logoShimmer.setVisibility(View.GONE);
+        findViewById(R.id.signInLogo).setVisibility(View.VISIBLE);
     }
 }
 
