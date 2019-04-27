@@ -223,8 +223,12 @@ class HomeFragment : Fragment() {
         var posts: List<Post> = listOf()
 
         for(postMap in postList){
+            var hashList = arrayListOf<String>()
+            if((postMap["post"] as Map<*, *>)["Hashtags"] != null)
+                hashList = (postMap["post"] as Map<*, *>)["Hashtags"] as ArrayList<String>
+
             posts = posts + Post((((postMap["post"] as Map<*, *>)["PostBody"] as Map<*, *>)["Img"] as Map<*, *>)["Link"] as String,
-                                    (((postMap["post"] as Map<*, *>)["PostBody"] as Map<*, *>)["Message"] as String))
+                            hashList, (((postMap["post"] as Map<*, *>)["PostBody"] as Map<*, *>)["Message"] as String))
         }
 
         val pc = Postcard(postcard["CreatedBy"] as String, postcard["Title"] as String, (postcard["Likes"] as Double).toString(),

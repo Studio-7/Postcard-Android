@@ -199,7 +199,7 @@
                 android:text="mitch.tabian moutains #earthporn #mountains"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                android:id="@+id/image_caption"
+                android:id="@+id/postHashtags"
                 android:layout_below="@+id/image_likes"
                 android:layout_marginTop="15dp"/>
 
@@ -209,7 +209,7 @@
                 android:text="View all 3 comments"
                 android:textColor="@color/grey_700"
                 android:textSize="18sp"
-                android:layout_below="@+id/image_caption"
+                android:layout_below="@+id/postHashtags"
                 android:id="@+id/image_comments_link"
                 android:layout_marginTop="15dp"/>
 

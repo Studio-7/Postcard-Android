@@ -158,7 +158,7 @@
                     android:layout_width="340dp"
                     android:layout_height="18dp"
                     android:background="@color/grey_400"
-                    android:id="@+id/image_caption"
+                    android:id="@+id/postHashtags"
                     android:layout_below="@+id/image_likes"
                     android:layout_marginTop="15dp"/>
 
@@ -166,7 +166,7 @@
                     android:layout_width="360dp"
                     android:layout_height="38dp"
                     android:background="@color/grey_400"
-                    android:layout_below="@+id/image_caption"
+                    android:layout_below="@+id/postHashtags"
                     android:id="@+id/image_comments_link"
                     android:layout_marginTop="15dp"/>
 

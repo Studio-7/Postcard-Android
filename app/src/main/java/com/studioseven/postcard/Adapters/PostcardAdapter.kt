@@ -36,6 +36,7 @@ class PostcardAdapter(private val postcardList: List<Postcard>, private val cont
         val image_heart_white = view.image_heart_white
         val image_heart_red = view.image_heart_red
         val postDescription = view.postDescriptionTv
+        val postHashtags = view.postHashtags
     }
 
     lateinit var myViewHolder: MyViewHolder
@@ -99,6 +100,12 @@ class PostcardAdapter(private val postcardList: List<Postcard>, private val cont
             holder.image_heart_white.visibility = View.VISIBLE
             holder.image_heart_red.visibility = View.INVISIBLE
         }
+
+        var hashtags = ""
+        for(h in postcardList[position].mediaLinkList[holder.imageScroll.currentItem].hashtags){
+            hashtags += "$h "
+        }
+        holder.postHashtags.text = hashtags
     }
 
     override fun onCurrentItemChanged(holder: ImageAdapter.ViewHolder?, position: Int) {
@@ -115,6 +122,12 @@ class PostcardAdapter(private val postcardList: List<Postcard>, private val cont
                 myViewHolder.postDescription.visibility = View.VISIBLE
                 myViewHolder.postDescription.text = message
             }else myViewHolder.postDescription.visibility = View.GONE
+
+            var hashtags = ""
+            for(h in postcardList[myViewHolder.adapterPosition].mediaLinkList[myViewHolder.imageScroll.currentItem].hashtags){
+                hashtags += "$h "
+            }
+            myViewHolder.postHashtags.text = hashtags
         }
     }
 
