@@ -213,7 +213,9 @@ public class SignInActivity extends AppCompatActivity {
 
             //Toast.makeText(SignInActivity.this, " Result is "+result+ "  Token is "+token , Toast.LENGTH_SHORT).show();
 
-            Intent i=new Intent(SignInActivity.this, MainActivity.class);
+            Intent i;
+            i=new Intent(SignInActivity.this, MainActivity.class);
+
             startActivity(i);
         }else{
             Toast.makeText(getApplicationContext(), hm.get("error"), Toast.LENGTH_SHORT).show();

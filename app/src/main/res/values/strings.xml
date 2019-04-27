@@ -24,5 +24,6 @@
     <string name="prevCapsuleTitle">prevcapsuletitle</string>
     <string name="prevCapsuleMessage">prevcapsulemessgae</string>
     <string name="prevCapsuleId">prevcapsuleid</string>
+    <string name="intro_seen">introSeen</string>
 
 </resources>

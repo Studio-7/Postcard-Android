@@ -67,4 +67,17 @@ class LocalStorageHelper(var context: Context?) {
         Constants.userName = displayName
         saveToProfile(context!!.getString(R.string.username_key), displayName)
     }
+
+    fun hasSeenIntro(): Boolean {
+        if(getFromProfile(context!!.getString(R.string.intro_seen), "false") == "true") {
+            updateHasSeenIntro(true)
+            return true
+        }
+        return false
+    }
+
+    fun updateHasSeenIntro(b: Boolean) {
+        Constants.hasSeenIntro = b
+        saveToProfile(context!!.getString(R.string.intro_seen), b.toString())
+    }
 }

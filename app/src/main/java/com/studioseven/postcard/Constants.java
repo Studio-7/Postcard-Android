@@ -14,4 +14,5 @@ public class Constants {
     public static String userName = "";
     public static String location = "";
 
+    public static boolean hasSeenIntro = false;
 }
